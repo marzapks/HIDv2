@@ -47,12 +47,31 @@
   .home-title {
     position: absolute; top: 4vh; left: 50%; transform: translateX(-50%);
     font-family: 'Press Start 2P', monospace;
-    font-size: clamp(1.4rem, 4vw, 3.2rem);
-    color: var(--neon);
-    text-shadow: 0 0 10px var(--neon), 0 0 24px var(--neon-dim), 0 0 50px var(--neon-dim);
+    font-size: clamp(1.25rem, 3.7vw, 3rem);
+    color: #92fff0;
     letter-spacing: 0.1em;
     text-align: center;
     z-index: 5;
+    filter: none;
+    text-shadow:
+      1px 1px 0 #008b78,
+      2px 2px 0 #006f62,
+      3px 3px 0 #004f48,
+      0 0 6px rgba(0,255,208,0.72),
+      0 0 14px rgba(0,184,154,0.45);
+  }
+  .home-title span {
+    display:inline-block; margin:0 0.01em; position:relative;
+    background:
+      linear-gradient(135deg,#bffff7 0%,#41ffe1 30%,#00bfa5 60%,#006a60 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .home-title span::after {
+    content:""; position:absolute; inset:-0.12em;
+    background-image:
+      linear-gradient(rgba(180,255,245,.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,255,245,.18) 1px, transparent 1px);
+    background-size:.34em .34em; opacity:.8; mix-blend-mode:screen; pointer-events:none;
   }
   .home-subtitle {
     position: absolute; top: calc(4vh + clamp(1.6rem,4.5vw,3.8rem)); left: 50%; transform: translateX(-50%);
@@ -301,6 +320,12 @@
   .pad-toggle { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border: 1px solid var(--neon-dim); background: #000; cursor: pointer; }
   .pad-toggle.on { background: var(--neon); }
   .pad-name { font-size: 8px; opacity: 0.8; }
+  .sampler-editor { border:1px solid var(--neon-dim); padding:8px; margin:8px 0; background:rgba(0,255,208,0.04); }
+  .pad.editor-selected { border-color: var(--accent); box-shadow:0 0 14px var(--accent), inset 0 0 10px rgba(255,77,210,.15); }
+  .pad.dragging { opacity:.55; transform:scale(.96); }
+  .pad-drag-grip { font-size:10px; color:var(--accent); letter-spacing:.2em; }
+  .mini-input { width:80px; background:#000; color:var(--neon); border:1px solid var(--neon-dim); padding:4px; font-family:inherit; font-size:10px; }
+
 
   /* ============================== CHORD BANK ============================== */
   .chord-letter-tabs { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 8px; }
@@ -322,6 +347,9 @@
   }
   .threed-orb.selected { box-shadow: 0 0 30px var(--accent), 0 0 60px var(--accent); }
   .threed-orb.center { background: radial-gradient(circle, var(--accent), transparent); }
+  .threed-orb-label { position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:3px; font-size:8px; color:var(--neon); white-space:nowrap; text-shadow:0 0 8px var(--neon); pointer-events:none; }
+  .threed-orb-depth { position:absolute; right:-18px; top:50%; transform:translateY(-50%); width:12px; height:2px; background:var(--neon); box-shadow:0 0 8px var(--neon); pointer-events:none; }
+  .threed-panel { border:1px solid var(--neon-dim); background:rgba(0,255,208,.04); padding:8px; margin-top:8px; }
   .threed-mode-row { display: flex; gap: 4px; margin-bottom: 8px; }
 
   /* ============================== MOD WHEEL ============================== */
@@ -341,10 +369,72 @@
   .color-row label { font-size: 10px; color: var(--neon-dim); min-width: 80px; letter-spacing: 0.04em; }
   .color-row input[type="color"] { width: 40px; height: 30px; border: 1px solid var(--neon-dim); background: #000; cursor: pointer; }
 
+
+
+  /* ============================== MEDIA SOUNDSCAPE ============================== */
+  .media-soundscape { display: flex; flex-direction: column; gap: 10px; }
+  .media-upload-zone {
+    border: 1px dashed var(--neon-dim); background: rgba(0,255,208,0.04);
+    padding: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .media-upload-zone input[type="file"] { max-width: 100%; color: var(--neon); font-size: 10px; }
+  .media-preview {
+    width: 100%; min-height: 150px; max-height: 260px; background: #000;
+    border: 1px solid var(--neon-dim); display:flex; align-items:center; justify-content:center;
+    overflow:hidden; position: relative;
+  }
+  .media-preview img, .media-preview video { max-width: 100%; max-height: 260px; display:block; object-fit: contain; }
+  .media-preview-empty { color: var(--neon-dim); font-size: 10px; letter-spacing: .08em; text-align:center; padding:20px; }
+  .media-analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px; }
+  .media-meter { border:1px solid rgba(0,255,208,.25); background:rgba(0,0,0,.45); padding:6px; }
+  .media-meter-label { font-size:8px; color:var(--neon-dim); letter-spacing:.08em; display:flex; justify-content:space-between; }
+  .media-meter-track { height:5px; background:rgba(0,255,208,.12); margin-top:5px; overflow:hidden; }
+  .media-meter-fill { height:100%; background:linear-gradient(90deg, var(--neon-dim), var(--neon)); box-shadow:0 0 8px var(--neon); }
+  .media-signature {
+    border:1px solid var(--neon-dim); background:rgba(0,255,208,.04); padding:8px;
+    color:var(--text); font-size:10px; line-height:1.45;
+  }
+  .media-palette { display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+  .media-swatch { width:20px; height:20px; border:1px solid rgba(216,255,248,.35); box-shadow:0 0 8px rgba(0,255,208,.15); }
+  .media-map-list { display:grid; grid-template-columns:1fr; gap:4px; font-size:9px; color:var(--neon-dim); }
+  .media-status { color:var(--neon); font-size:10px; min-height:14px; }
+
   /* ============================== SHORTCUTS ============================== */
   .shortcut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; }
   .shortcut-item { padding: 6px; border: 1px solid var(--neon-dim); display: flex; justify-content: space-between; font-size: 10px; }
   .shortcut-key { color: var(--neon); font-weight: bold; padding: 1px 6px; background: rgba(0,255,208,0.1); border: 1px solid var(--neon-dim); }
+
+
+
+  /* ============================== CUSTOM KEYBOARD MAPPER ============================== */
+  .keymap-window-root { position: relative; }
+  .keymap-toolbar { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .keymap-status { padding:6px 8px; border:1px solid rgba(0,255,208,0.35); background:rgba(0,255,208,0.07); color:var(--text); font-size:10px; line-height:1.35; }
+  .mac-keyboard { display:flex; flex-direction:column; gap:5px; padding:8px; border:1px solid var(--neon-dim); background:rgba(0,0,0,0.55); overflow:auto; }
+  .mac-key-row { display:flex; gap:5px; min-width:max-content; }
+  .mac-key {
+    min-width:34px; height:34px; padding:0 6px; border:1px solid rgba(0,255,208,0.45);
+    border-radius:5px; background:linear-gradient(180deg,#071615,#000); color:var(--neon);
+    box-shadow:inset 0 -3px 6px rgba(0,255,208,0.1); font-size:10px; text-align:center;
+    display:flex; align-items:center; justify-content:center; white-space:nowrap;
+  }
+  .mac-key.wide { min-width:62px; }
+  .mac-key.xwide { min-width:82px; }
+  .mac-key.space { min-width:240px; }
+  .mac-key.selected { background:var(--accent); color:#000; border-color:var(--accent); box-shadow:0 0 14px var(--accent); }
+  .mac-key.mapped:not(.selected) { border-color:var(--neon); box-shadow:0 0 10px rgba(0,255,208,0.6), inset 0 0 8px rgba(0,255,208,0.18); }
+  .mapping-list { display:grid; grid-template-columns:1fr; gap:5px; margin-top:8px; max-height:120px; overflow:auto; }
+  .mapping-row { display:flex; justify-content:space-between; align-items:center; gap:8px; border:1px solid rgba(0,255,208,0.25); padding:5px 6px; font-size:10px; background:rgba(0,255,208,0.05); }
+  .mapping-keycap { color:var(--neon); border:1px solid var(--neon-dim); padding:2px 6px; border-radius:4px; background:#000; }
+  .keymap-edit-banner { position:fixed; left:50%; top:10px; transform:translateX(-50%); z-index:99999; padding:9px 14px; border:1px solid var(--accent); background:#070005; color:var(--accent); box-shadow:0 0 18px var(--accent); font-family:'Share Tech Mono', monospace; font-size:12px; pointer-events:none; }
+  body.keymap-editing [data-keymap-target="true"]:not([data-keymap-ignore="true"]) {
+    outline:2px dashed var(--accent) !important; outline-offset:3px !important;
+    box-shadow:0 0 14px var(--accent), inset 0 0 8px rgba(255,77,210,0.22) !important;
+    position:relative;
+  }
+  body.keymap-editing [data-keymap-target="true"]:not([data-keymap-ignore="true"]):hover {
+    outline-style:solid !important; filter:brightness(1.25);
+  }
 
   /* helpers */
   .scroll { overflow: auto; }
@@ -531,7 +621,10 @@ const SHORTCUTS = {
   'Z / X':  'Octave − / +',
   ', / .':  'Transpose − / +',
   '↑ / ↓':  'Pitch bend up / down',
-  '← / →':  'Cycle pads left / right',
+  '← / →':  'Smooth pad previous / next using loop or ping-pong mode',
+  '[ / ]':  'Smooth pad previous / next',
+  'Enter':  'Trigger selected pad',
+  'Pad Mode': 'Stack / Step Seq / Toggle Hold in sampler window',
   'Space':  'Play / Stop',
   'B':      'Build mode toggle',
   'C':      'Clear shape',
@@ -546,6 +639,153 @@ const SHORTCUTS = {
   'Q‒T':    'Sample pad triggers (row 2)',
 };
 
+const DEFAULT_FX = {
+  eqLow:0, eqMid:0, eqHi:0,
+  drive:0, chorus:0.2, phaser:0, tremolo:0,
+  delayTime:0.3, delayFb:0.25, delayWet:0.2,
+  reverbWet:0.25, filterCut:12000, filterRes:0,
+};
+const DEFAULT_PAD_FX = { ...DEFAULT_FX, level:1 };
+const withDefaultPadFx = (fx={}) => ({ ...DEFAULT_PAD_FX, ...(fx || {}) });
+
+
+
+
+/* ============================================================
+   CUSTOM KEYBOARD MAPPING UTILS
+   ============================================================ */
+const MAC_KEY_ROWS = [
+  [
+    ['Escape','esc','wide'], ['F1','F1'], ['F2','F2'], ['F3','F3'], ['F4','F4'], ['F5','F5'], ['F6','F6'], ['F7','F7'], ['F8','F8'], ['F9','F9'], ['F10','F10'], ['F11','F11'], ['F12','F12']
+  ],
+  [
+    ['Backquote','`'], ['Digit1','1'], ['Digit2','2'], ['Digit3','3'], ['Digit4','4'], ['Digit5','5'], ['Digit6','6'], ['Digit7','7'], ['Digit8','8'], ['Digit9','9'], ['Digit0','0'], ['Minus','-'], ['Equal','='], ['Backspace','delete','xwide']
+  ],
+  [
+    ['Tab','tab','wide'], ['KeyQ','Q'], ['KeyW','W'], ['KeyE','E'], ['KeyR','R'], ['KeyT','T'], ['KeyY','Y'], ['KeyU','U'], ['KeyI','I'], ['KeyO','O'], ['KeyP','P'], ['BracketLeft','['], ['BracketRight',']'], ['Backslash','\\','wide']
+  ],
+  [
+    ['CapsLock','caps','xwide'], ['KeyA','A'], ['KeyS','S'], ['KeyD','D'], ['KeyF','F'], ['KeyG','G'], ['KeyH','H'], ['KeyJ','J'], ['KeyK','K'], ['KeyL','L'], ['Semicolon',';'], ['Quote',"'"], ['Enter','return','xwide']
+  ],
+  [
+    ['ShiftLeft','shift','xwide'], ['KeyZ','Z'], ['KeyX','X'], ['KeyC','C'], ['KeyV','V'], ['KeyB','B'], ['KeyN','N'], ['KeyM','M'], ['Comma',','], ['Period','.'], ['Slash','/'], ['ShiftRight','shift','xwide'], ['ArrowUp','↑']
+  ],
+  [
+    ['ControlLeft','control','wide'], ['AltLeft','option','wide'], ['MetaLeft','command','xwide'], ['Space','space','space'], ['MetaRight','command','xwide'], ['AltRight','option','wide'], ['ArrowLeft','←'], ['ArrowDown','↓'], ['ArrowRight','→']
+  ]
+];
+const MAC_KEY_LABELS = Object.fromEntries(MAC_KEY_ROWS.flat().map(([code,label]) => [code, label]));
+const keyEventCode = (e) => e.code || e.key || '';
+
+const isTypingTarget = (el) => {
+  if (!el) return false;
+  const tag = el.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+};
+const cleanLabel = (txt='') => String(txt).replace(/\s+/g,' ').trim().slice(0,80);
+const labelForRange = (el) => {
+  const row = el.closest('.row, .color-row, .keyboard-control');
+  if (row) {
+    const lab = row.querySelector('label, .small, .top-label');
+    if (lab) return cleanLabel(lab.textContent);
+  }
+  return cleanLabel(el.getAttribute('aria-label') || el.name || 'Slider');
+};
+const getKeymapTargetInfo = (el) => {
+  if (!el) return { kind:'unknown', label:'Unknown control' };
+  const explicitKind = el.dataset.keymapKind;
+  if (explicitKind) return { kind: explicitKind, label: cleanLabel(el.dataset.keymapLabel || el.textContent || explicitKind) };
+  if (el.classList && el.classList.contains('knob')) {
+    const wrap = el.closest('.knob-wrap');
+    const lab = wrap && wrap.querySelector('.knob-label');
+    return { kind:'knob', label: cleanLabel(lab ? lab.textContent : 'Knob') };
+  }
+  if (el.classList && el.classList.contains('mod-slider')) {
+    const lab = el.parentElement && el.parentElement.querySelector('.mod-slider-label');
+    return { kind:'modslider', label: cleanLabel(lab ? lab.textContent : 'Mod Slider') };
+  }
+  if (el.classList && el.classList.contains('pad')) return { kind:'pad', label: cleanLabel(el.textContent || 'Pad') };
+  if (el.classList && el.classList.contains('pkey')) return { kind:'pkey', label: cleanLabel(el.querySelector('.pkey-label')?.textContent || 'Piano Key') };
+  if (el.tagName === 'BUTTON') return { kind:'button', label: cleanLabel(el.textContent || 'Button') };
+  if (el.tagName === 'SELECT') return { kind:'select', label: cleanLabel(el.value || 'Menu') };
+  if (el.tagName === 'INPUT' && el.type === 'range') return { kind:'range', label: labelForRange(el) };
+  return { kind:'control', label: cleanLabel(el.textContent || el.className || 'Control') };
+};
+const refreshKeymapTargets = () => {
+  const selector = '.app button, .app input[type="range"], .app select, .app .knob, .app .mod-slider, .app .pad, .app .pkey';
+  const nodes = Array.from(document.querySelectorAll(selector)).filter(el => {
+    if (el.closest('.keymap-window-root')) return false;
+    if (el.classList.contains('window-close') || el.classList.contains('window-resize')) return false;
+    return true;
+  });
+  nodes.forEach((el, i) => {
+    if (!el.dataset.mapId) el.dataset.mapId = `km-${i}`;
+    el.dataset.keymapTarget = 'true';
+    const info = getKeymapTargetInfo(el);
+    el.dataset.keymapKind = el.dataset.keymapKind || info.kind;
+    el.dataset.keymapLabel = el.dataset.keymapLabel || info.label;
+  });
+  return nodes;
+};
+const setNativeValue = (el, value) => {
+  const proto = el instanceof HTMLSelectElement ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+  const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+  if (setter) setter.call(el, value); else el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles:true }));
+  el.dispatchEvent(new Event('change', { bubbles:true }));
+};
+const adjustRangeLike = (el, direction='up') => {
+  const sign = direction === 'down' || direction === 'left' || direction === 'decrease' ? -1 : 1;
+  if (el.tagName === 'SELECT') {
+    const next = Math.max(0, Math.min(el.options.length - 1, el.selectedIndex + sign));
+    el.selectedIndex = next;
+    el.dispatchEvent(new Event('change', { bubbles:true }));
+    return;
+  }
+  const min = Number(el.min || 0), max = Number(el.max || 1);
+  const rawStep = Number(el.step || 0);
+  const step = rawStep > 0 ? rawStep : Math.max((max-min)/20, 0.01);
+  const current = Number(el.value || 0);
+  const next = Math.max(min, Math.min(max, current + sign * step));
+  setNativeValue(el, String(next));
+};
+const runMappedTarget = (mapping, phase='down') => {
+  if (!mapping || !mapping.targetId) return false;
+  refreshKeymapTargets();
+  let el = document.querySelector(`[data-map-id="${mapping.targetId}"]`);
+  if (el && mapping.label) {
+    const info = getKeymapTargetInfo(el);
+    if (info.kind !== mapping.kind || info.label !== mapping.label) el = null;
+  }
+  if (!el && mapping.label) {
+    el = Array.from(document.querySelectorAll('[data-keymap-target="true"]')).find(node => {
+      const info = getKeymapTargetInfo(node);
+      return info.kind === mapping.kind && info.label === mapping.label;
+    });
+  }
+  if (!el) return false;
+  const kind = mapping.kind || getKeymapTargetInfo(el).kind;
+  if (kind === 'pad' || kind === 'pkey') {
+    const eventName = phase === 'up' ? 'mouseup' : 'mousedown';
+    el.dispatchEvent(new MouseEvent(eventName, { bubbles:true, cancelable:true, view:window }));
+    return true;
+  }
+  if (kind === 'button' || el.tagName === 'BUTTON') {
+    if (phase === 'down') el.click();
+    return true;
+  }
+  if (kind === 'range' || el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+    if (phase === 'down') adjustRangeLike(el, mapping.direction);
+    return true;
+  }
+  if (kind === 'knob' || kind === 'modslider') {
+    el.dispatchEvent(new CustomEvent('hid-keymap-adjust', { bubbles:true, detail:{ direction:mapping.direction, phase } }));
+    return true;
+  }
+  if (phase === 'down' && typeof el.click === 'function') el.click();
+  return true;
+};
+
 /* ============================================================
    AUDIO ENGINE
    ============================================================ */
@@ -556,13 +796,15 @@ const AE = {
   eqLow: null, eqMid: null, eqHi: null,
   filter: null, drive: null,
   chorus: null, phaser: null, tremolo: null, delay: null, reverb: null,
-  threeReverb: null, threeShimmer: null, threeDelay: null, threeGain: null,
+  threeInput: null, threePre: null, threeReverb: null, threeShimmer: null, threeDelay: null, threeSparkle: null, threeAir: null, threePan: null, threeComp: null, threeLimiter: null, threeGain: null,
   // synth
   voices: {}, // midi -> {node, env, ...} for poly
   currentPatch: null,
   voiceCount: 0,
   // per-pad players
   padPlayers: {},
+  mediaSoundscape: null,
+  samplerPitchCents: 0,
   init() {
     if (this.ready) return;
     Tone.start();
@@ -578,11 +820,31 @@ const AE = {
     this.eqMid = new Tone.Filter({ frequency: 1000, type: 'peaking', Q: 1, gain: 0 }).connect(this.eqHi);
     this.eqLow = new Tone.Filter({ frequency: 200, type: 'lowshelf', gain: 0 }).connect(this.eqMid);
 
-    // 3D sound chain (parallel layer)
-    this.threeGain = new Tone.Gain(0).connect(this.master);
-    this.threeReverb = new Tone.Reverb({ decay: 8, wet: 0.9 }).connect(this.threeGain);
-    this.threeShimmer = new Tone.PitchShift({ pitch: 12, wet: 0.5 }).connect(this.threeReverb);
-    this.threeDelay = new Tone.PingPongDelay({ delayTime: '8n.', feedback: 0.55, wet: 0.6 }).connect(this.threeShimmer);
+    // 3D sound chain (parallel wet layer fed by the real keys + sampler pads)
+    // Rebuilt as a soft, high-headroom ethereal send: gentle input, capped feedback,
+    // stereo placement, compression and limiting to prevent clipping while points move.
+    this.threeInput = new Tone.Gain(0.55);
+    this.threePre = new Tone.Filter({ frequency: 8500, type: 'lowpass', Q: 0.35 });
+    this.threeDelay = new Tone.PingPongDelay({ delayTime: 0.28, feedback: 0.18, wet: 0.22 });
+    this.threeSparkle = new Tone.FeedbackDelay({ delayTime: 0.11, feedback: 0.12, wet: 0.16 });
+    this.threeShimmer = new Tone.PitchShift({ pitch: 12, windowSize: 0.16, delayTime: 0.035, feedback: 0.06, wet: 0.18 });
+    this.threeAir = new Tone.Filter({ frequency: 7200, type: 'highshelf', gain: 1.8 });
+    this.threeReverb = new Tone.Reverb({ decay: 5.5, preDelay: 0.055, wet: 0.48 });
+    this.threeGain = new Tone.Gain(0);
+    this.threeComp = new Tone.Compressor({ threshold: -18, ratio: 2.4, attack: 0.025, release: 0.22 });
+    this.threeLimiter = new Tone.Limiter(-6);
+    this.threePan = new Tone.Panner(0).connect(this.master);
+    this.threeInput.connect(this.threePre);
+    this.threePre.connect(this.threeDelay);
+    this.threeDelay.connect(this.threeSparkle);
+    this.threeSparkle.connect(this.threeShimmer);
+    this.threeShimmer.connect(this.threeAir);
+    this.threeAir.connect(this.threeReverb);
+    this.threeReverb.connect(this.threeGain);
+    this.threeGain.connect(this.threeComp);
+    this.threeComp.connect(this.threeLimiter);
+    this.threeLimiter.connect(this.threePan);
+    this.eqLow.connect(this.threeInput);
 
     // analyser for visualizer
     this.analyser = new Tone.Analyser('waveform', 512);
@@ -592,12 +854,12 @@ const AE = {
   },
   voicesInput() { return this.eqLow; },
   // build a fresh voice given patch + midi
-  buildVoice(patch, midi) {
+  buildVoice(patch, midi, destination=null) {
     const freq = midiToFreq(midi);
     const env = new Tone.AmplitudeEnvelope({
       attack:patch.amp[0], decay:patch.amp[1], sustain:patch.amp[2], release:patch.amp[3]
     });
-    env.connect(this.voicesInput());
+    env.connect(destination || this.voicesInput());
 
     if (patch.kind === 'fm') {
       const carrier = new Tone.Oscillator(freq, 'sine').start();
@@ -645,10 +907,10 @@ const AE = {
     env.triggerAttack();
     return { kind:'sub', env, filtEnv, nodes:[o1, o2, sub, oscGain, filt, filtMod].filter(Boolean) };
   },
-  noteOn(midi, patch) {
+  noteOn(midi, patch, destination=null) {
     if (!this.ready) return;
     if (this.voices[midi]) this.noteOff(midi, true);
-    const voice = this.buildVoice(patch, midi);
+    const voice = this.buildVoice(patch, midi, destination);
     this.voices[midi] = voice;
     this.voiceCount++;
   },
@@ -674,9 +936,97 @@ const AE = {
     this.voices = {}; this.voiceCount = 0;
   },
   setMaster(v) { if (this.ready) this.master.gain.value = v; },
-  applyDetune(cents) {
+  applyDetune(cents, glideSeconds=0) {
+    const glide = Math.max(0, Number(glideSeconds) || 0);
     Object.values(this.voices).forEach(v => {
-      v.nodes.forEach(n => { if (n && n.detune && typeof n.detune.value === 'number') n.detune.value = cents; });
+      v.nodes.forEach(n => {
+        if (!n || !n.detune) return;
+        try {
+          if (glide > 0 && typeof n.detune.rampTo === 'function') {
+            n.detune.rampTo(cents, glide);
+          } else if (glide > 0 && typeof n.detune.linearRampToValueAtTime === 'function') {
+            n.detune.linearRampToValueAtTime(cents, Tone.now() + glide);
+          } else if (typeof n.detune.value === 'number') {
+            n.detune.value = cents;
+          }
+        } catch(e) {
+          try { n.detune.value = cents; } catch(_){}
+        }
+      });
+    });
+  },
+  createPadFxChain(fx={}) {
+    if (!this.ready) return null;
+    const f = withDefaultPadFx(fx);
+    const input = new Tone.Gain(1);
+    const low = new Tone.Filter({ frequency:200, type:'lowshelf', gain:f.eqLow });
+    const mid = new Tone.Filter({ frequency:1000, type:'peaking', Q:1, gain:f.eqMid });
+    const hi = new Tone.Filter({ frequency:5000, type:'highshelf', gain:f.eqHi });
+    const filter = new Tone.Filter({ frequency:f.filterCut, type:'lowpass', Q:f.filterRes });
+    const drive = new Tone.Distortion({ distortion:f.drive, wet:f.drive > 0 ? Math.min(1, f.drive * 1.5) : 0 });
+    const chorus = new Tone.Chorus({ frequency:1.5, delayTime:3.5, depth:f.chorus, wet:f.chorus > 0 ? Math.min(1, f.chorus) : 0 }).start();
+    const phaser = new Tone.Phaser({ frequency:0.5, octaves:f.phaser * 3, baseFrequency:600 });
+    const tremolo = new Tone.Tremolo({ frequency:4, depth:f.tremolo }).start();
+    const delay = new Tone.FeedbackDelay({ delayTime:f.delayTime, feedback:f.delayFb, wet:f.delayWet });
+    const reverb = new Tone.Reverb({ decay:3, wet:f.reverbWet });
+    const level = new Tone.Gain(f.level ?? 1);
+    input.connect(low);
+    low.connect(mid); mid.connect(hi); hi.connect(filter); filter.connect(drive);
+    drive.connect(chorus); chorus.connect(phaser); phaser.connect(tremolo); tremolo.connect(delay); delay.connect(reverb); reverb.connect(level);
+    level.connect(this.voicesInput());
+    const chain = { input, low, mid, hi, filter, drive, chorus, phaser, tremolo, delay, reverb, level, nodes:[input,low,mid,hi,filter,drive,chorus,phaser,tremolo,delay,reverb,level] };
+    this.updatePadFxChain(chain, f);
+    return chain;
+  },
+  updatePadFxChain(chain, fx={}) {
+    if (!chain) return;
+    const f = withDefaultPadFx(fx);
+    try {
+      chain.low.gain.rampTo(f.eqLow, 0.03);
+      chain.mid.gain.rampTo(f.eqMid, 0.03);
+      chain.hi.gain.rampTo(f.eqHi, 0.03);
+      chain.filter.frequency.rampTo(f.filterCut, 0.03);
+      chain.filter.Q.rampTo(f.filterRes, 0.03);
+      chain.drive.distortion = f.drive;
+      chain.drive.wet.rampTo(f.drive > 0 ? Math.min(1, f.drive * 1.5) : 0, 0.03);
+      chain.chorus.depth = f.chorus;
+      chain.chorus.wet.rampTo(f.chorus > 0 ? Math.min(1, f.chorus) : 0, 0.03);
+      chain.phaser.octaves = f.phaser * 3;
+      chain.tremolo.depth.rampTo(f.tremolo, 0.03);
+      chain.delay.delayTime.value = f.delayTime;
+      chain.delay.feedback.rampTo(f.delayFb, 0.03);
+      chain.delay.wet.rampTo(f.delayWet, 0.03);
+      chain.reverb.wet.rampTo(f.reverbWet, 0.03);
+      chain.level.gain.rampTo(f.level ?? 1, 0.03);
+    } catch(e) {}
+  },
+  disposePadFxChain(chain) {
+    if (!chain) return;
+    try { chain.nodes.forEach(n => n && n.dispose && n.dispose()); } catch(e) {}
+  },
+  rampSamplerPlayer(ref, targetRate, glideSeconds=0) {
+    if (!ref || !ref.player) return;
+    const glide = Math.max(0, Number(glideSeconds) || 0);
+    if (ref.pitchRaf) cancelAnimationFrame(ref.pitchRaf);
+    const current = Number(ref.player.playbackRate || ref.baseRate || 1);
+    if (!glide) { ref.player.playbackRate = targetRate; return; }
+    const start = performance.now();
+    const dur = Math.max(25, glide * 1000);
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      const smooth = t * t * (3 - 2 * t);
+      try { ref.player.playbackRate = current + (targetRate - current) * smooth; } catch(e) {}
+      if (t < 1) ref.pitchRaf = requestAnimationFrame(step);
+      else ref.pitchRaf = null;
+    };
+    ref.pitchRaf = requestAnimationFrame(step);
+  },
+  applySamplerPitch(cents, glideSeconds=0) {
+    this.samplerPitchCents = Number(cents) || 0;
+    const pitchRate = Math.pow(2, this.samplerPitchCents / 1200);
+    Object.values(this.padPlayers || {}).forEach(ref => {
+      if (!ref || ref.type !== 'audio' || !ref.player) return;
+      this.rampSamplerPlayer(ref, (ref.baseRate || 1) * pitchRate, glideSeconds);
     });
   },
   setFX({ eqLow, eqMid, eqHi, drive, chorus, phaser, tremolo, delayTime, delayFb, delayWet, reverb, reverbWet, filterCut, filterRes }) {
@@ -697,13 +1047,175 @@ const AE = {
     this.filter.frequency.value = filterCut;
     this.filter.Q.value = filterRes;
   },
-  set3D(on, x, y, z, mix, shimmer) {
+
+  startMediaSoundscape(signature, settings={}) {
+    if (!this.ready) this.init();
+    this.stopMediaSoundscape();
+    const clamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi, Number.isFinite(+v) ? +v : lo));
+    const sig = signature || {};
+    const f = sig.features || {};
+    const s = {
+      presence: clamp(settings.presence ?? 0.48),
+      shimmer: clamp(settings.shimmer ?? (0.24 + (f.saturation || .4) * .34)),
+      space: clamp(settings.space ?? (0.46 + (f.symmetry || .45) * .36)),
+      texture: clamp(settings.texture ?? (0.26 + (f.edge || .35) * .44)),
+      motion: clamp(settings.motion ?? (0.18 + (f.motion || .2) * .52)),
+      softness: clamp(settings.softness ?? 0.72),
+      tempo: Math.max(24, Math.min(132, Number(settings.tempo || sig.tempo || 54)))
+    };
+    const root = sig.rootMidi || 48;
+    const notes = (sig.notes && sig.notes.length ? sig.notes : [root, root+2, root+7, root+9]).map(n=>Math.max(24, Math.min(96, n)));
+    const chord = (sig.chord && sig.chord.length ? sig.chord : [root, root+7, root+14]).map(n=>Math.max(24, Math.min(84, n)));
+    const sequence = sig.sequence && sig.sequence.length ? sig.sequence : notes.map((_,i)=>i);
+    const bpmMs = 60000 / s.tempo;
+    const out = new Tone.Gain(0.001);
+    const soften = new Tone.Filter({ frequency: 3600 + (f.brightness || .5) * 4200, type:'lowpass', Q: 0.45 + (f.edge || .3) * 0.9 });
+    const chorus = new Tone.Chorus({ frequency: 0.05 + (f.motion || .2) * 0.45, delayTime: 4 + (f.paletteSpread || .4) * 9, depth: 0.18 + (f.saturation || .4) * 0.36, wet: 0.16 }).start();
+    const delay = new Tone.PingPongDelay({ delayTime: 0.22 + (f.motion || .2) * 0.32, feedback: 0.10 + (f.symmetry || .5) * 0.16, wet: 0.18 });
+    const shimmer = new Tone.PitchShift({ pitch: (f.warmth || .5) > .55 ? 12 : 7, windowSize: 0.22, delayTime: 0.04, feedback: 0.025, wet: 0.12 });
+    const reverb = new Tone.Reverb({ decay: 4.2 + (f.symmetry || .5) * 5.2, preDelay: 0.04, wet: 0.48 });
+    const comp = new Tone.Compressor({ threshold: -20, ratio: 2.8, attack: 0.03, release: 0.28 });
+    const limiter = new Tone.Limiter(-7).connect(this.master);
+    out.connect(soften); soften.connect(chorus); chorus.connect(delay); delay.connect(shimmer); shimmer.connect(reverb); reverb.connect(comp); comp.connect(limiter);
+
+    const pad = new Tone.PolySynth(Tone.Synth, {
+      oscillator:{ type: (f.saturation || .4) > .6 ? 'triangle' : 'sine' },
+      envelope:{ attack: 1.1 + (s.softness * 1.8), decay: 1.2, sustain: 0.45 + (f.brightness || .45)*0.28, release: 4.0 + s.space*4.5 }
+    }).connect(out);
+    const glass = new Tone.PolySynth(Tone.FMSynth, {
+      harmonicity: 0.5 + (f.hue || .3) * 2.4,
+      modulationIndex: 1.2 + (f.edge || .3) * 3.6,
+      envelope:{ attack: 0.02 + s.softness*.24, decay: 0.9 + s.texture*1.8, sustain: 0.05, release: 2.4 + s.space*2.4 },
+      modulationEnvelope:{ attack:0.08, decay:1.2 + s.texture*1.2, sustain:0, release:1.8 }
+    }).connect(out);
+    const bass = new Tone.MonoSynth({
+      oscillator:{ type:'sine' },
+      filter:{ frequency: 280 + (f.brightness || .5)*420, Q: 0.7 },
+      envelope:{ attack: 1.5 + s.softness*1.6, decay: 1.2, sustain: .55, release: 4.5 + s.space*2.8 },
+      filterEnvelope:{ attack: 1.0, decay: 1.5, sustain:.2, release: 3.0, baseFrequency:160, octaves:1.2 }
+    }).connect(out);
+    const noiseGain = new Tone.Gain(0.0001);
+    const noiseFilter = new Tone.Filter({ frequency: 1600 + (f.texture || .35)*4200, type:'bandpass', Q: 0.7 + (f.edge || .35)*3 });
+    const noise = new Tone.Noise((f.brightness || .5) > .55 ? 'pink' : 'brown').connect(noiseFilter).start();
+    noiseFilter.connect(noiseGain); noiseGain.connect(out);
+
+    const state = { out, soften, chorus, delay, shimmer, reverb, comp, limiter, pad, glass, bass, noise, noiseFilter, noiseGain, intervals:[], step:0, signature:sig, settings:s, nodes:[out,soften,chorus,delay,shimmer,reverb,comp,limiter,pad,glass,bass,noise,noiseFilter,noiseGain] };
+    const safeVel = 0.18 + (f.brightness || .5) * 0.18;
+    const rootName = midiToName(root - 12);
+    const triggerDrone = () => {
+      try {
+        pad.triggerAttackRelease(chord.map(midiToName), 5.5 + s.space*3.5, Tone.now(), 0.20 + s.presence*0.18);
+        bass.triggerAttackRelease(rootName, 4.8 + s.space*2.6, Tone.now(), 0.12 + s.presence*0.10);
+      } catch(e) {}
+    };
+    const triggerSpark = () => {
+      try {
+        const idx = sequence[state.step % sequence.length] % notes.length;
+        const octaveLift = ((state.step + (sig.seed || 0)) % 5 === 0) ? 12 : 0;
+        const n = notes[idx] + octaveLift;
+        const dur = 0.22 + s.softness * 0.36 + ((f.texture || .3) * 0.22);
+        glass.triggerAttackRelease(midiToName(n), dur, Tone.now(), safeVel * (0.72 + ((idx % 4) * .08)));
+        state.step++;
+      } catch(e) {}
+    };
+    triggerDrone();
+    state.intervals.push(setInterval(triggerDrone, Math.max(4200, bpmMs * (7 + Math.round(s.space*5)))));
+    state.intervals.push(setInterval(triggerSpark, Math.max(170, bpmMs * (0.72 - s.motion*0.32))));
+    noiseGain.gain.rampTo(0.006 + s.texture*0.027 + (f.motion || .1)*0.012, 1.4);
+    out.gain.rampTo(0.045 + s.presence * 0.26, 1.0);
+    this.mediaSoundscape = state;
+    this.updateMediaSoundscape(s);
+  },
+  updateMediaSoundscape(settings={}) {
+    const state = this.mediaSoundscape;
+    if (!state) return;
+    const clamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi, Number.isFinite(+v) ? +v : lo));
+    const f = state.signature.features || {};
+    const s = { ...state.settings, ...settings };
+    s.presence = clamp(s.presence); s.shimmer = clamp(s.shimmer); s.space = clamp(s.space); s.texture = clamp(s.texture); s.motion = clamp(s.motion); s.softness = clamp(s.softness);
+    state.settings = s;
+    try {
+      state.out.gain.rampTo(0.035 + s.presence * 0.28, 0.35);
+      state.soften.frequency.rampTo(3000 + (f.brightness || .5)*4200 + s.texture*1200, 0.35);
+      state.chorus.wet.rampTo(0.08 + s.motion*0.18 + (f.paletteSpread || .3)*0.06, 0.35);
+      state.chorus.depth = 0.14 + s.motion*.34;
+      state.delay.delayTime.rampTo(0.18 + s.motion*0.26 + s.space*0.12, 0.35);
+      state.delay.feedback.rampTo(Math.min(0.34, 0.08 + s.space*0.12 + s.motion*0.08), 0.35);
+      state.delay.wet.rampTo(0.08 + s.space*0.12 + s.motion*0.08, 0.35);
+      state.shimmer.wet.rampTo(0.035 + s.shimmer*0.20, 0.35);
+      state.shimmer.feedback.rampTo(Math.min(.12, .015 + s.shimmer*.075), 0.35);
+      state.reverb.decay = 3.2 + s.space * 7.0;
+      state.reverb.wet.rampTo(0.30 + s.space*0.34, 0.35);
+      state.noiseFilter.frequency.rampTo(1200 + s.texture*5200 + (f.edge || .3)*1300, 0.35);
+      state.noiseGain.gain.rampTo(0.003 + s.texture*0.026 + (f.motion || .1)*0.01, 0.35);
+    } catch(e) {}
+  },
+  stopMediaSoundscape() {
+    const state = this.mediaSoundscape;
+    if (!state) return;
+    this.mediaSoundscape = null;
+    try { state.intervals.forEach(clearInterval); } catch(e) {}
+    try { state.out.gain.rampTo(0, 0.35); } catch(e) {}
+    setTimeout(() => {
+      try {
+        state.nodes.forEach(n => {
+          if (!n) return;
+          if (n.stop) { try { n.stop(); } catch(_){} }
+          if (n.releaseAll) { try { n.releaseAll(); } catch(_){} }
+          if (n.dispose) { try { n.dispose(); } catch(_){} }
+        });
+      } catch(e) {}
+    }, 430);
+  },
+  set3D(on, points=[], selectedIdx=0) {
     if (!this.ready) return;
-    this.threeGain.gain.rampTo(on ? mix : 0, 0.3);
-    this.threeShimmer.wet.value = shimmer;
-    // simulate pan via stereo pan node on threeGain? threeGain is mono Gain; use Panner on master path instead.
-    // For simplicity rotate delay times by xy
-    this.threeDelay.feedback.value = 0.4 + Math.abs(y) * 0.4;
+    const clamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi, Number.isFinite(+v) ? +v : lo));
+    const pts = Array.isArray(points) && points.length ? points : [{x:.5,y:.5,z:.5,mix:.42,shimmer:.38,space:.65,delay:.35,feedback:.18,glitter:.32,air:.55}];
+    const weighted = (key, fallback=.5) => {
+      let total = 0, weight = 0;
+      pts.forEach(p => {
+        const w = 0.35 + clamp(p.mix ?? .45, 0, 1) * 0.65;
+        total += clamp(p[key] ?? fallback, 0, 1) * w;
+        weight += w;
+      });
+      return weight ? total / weight : fallback;
+    };
+    const main = pts[selectedIdx] || pts[0];
+    const x = weighted('x', .5);
+    const y = weighted('y', .5);
+    const depth = weighted('z', .5);
+    const mix = weighted('mix', .42);
+    const space = weighted('space', .65);
+    const delay = weighted('delay', .35);
+    const feedback = weighted('feedback', .18);
+    const shimmer = weighted('shimmer', .38);
+    const glitter = weighted('glitter', .32);
+    const air = weighted('air', .55);
+    const pointTexture = Math.min(.07, Math.max(0, pts.length - 1) * .012);
+    const targetWet = on ? Math.min(.42, .055 + mix * .28 + depth * .055 + pointTexture) : 0;
+    const pan = (x - .5) * 1.5;
+    const highCut = 4200 + air * 6500 + (1 - y) * 1800;
+    const reverbDecay = 2.8 + space * 6.8 + depth * 1.7;
+    const shimmerPitch = (main.flavor || '').toLowerCase().includes('sub') ? -12 : (7 + Math.round(shimmer * 8));
+
+    this.threeInput.gain.rampTo(on ? (0.42 + mix * 0.28) : 0, 0.28);
+    this.threeGain.gain.rampTo(targetWet, 0.35);
+    this.threePan.pan.rampTo(Math.max(-.9, Math.min(.9, pan)), 0.28);
+    this.threePre.frequency.rampTo(highCut, 0.28);
+    this.threePre.Q.rampTo(0.25 + glitter * 0.8, 0.28);
+    this.threeReverb.decay = reverbDecay;
+    this.threeReverb.wet.rampTo(on ? Math.min(.72, .3 + space*.32 + depth*.08) : 0, 0.35);
+    this.threeShimmer.pitch = shimmerPitch;
+    this.threeShimmer.feedback.rampTo(on ? Math.min(.16, .025 + shimmer*.12) : 0, 0.35);
+    this.threeShimmer.wet.rampTo(on ? Math.min(.34, .05 + shimmer*.24 + glitter*.04) : 0, 0.35);
+    this.threeDelay.delayTime.rampTo(0.12 + delay * 0.38 + depth * 0.06, 0.32);
+    this.threeDelay.feedback.rampTo(on ? Math.min(.42, .08 + feedback*.30 + depth*.04) : 0, 0.35);
+    this.threeDelay.wet.rampTo(on ? Math.min(.36, .08 + delay*.22 + space*.04) : 0, 0.35);
+    this.threeSparkle.delayTime.rampTo(0.07 + glitter * 0.16, 0.32);
+    this.threeSparkle.feedback.rampTo(on ? Math.min(.26, .04 + glitter*.18 + feedback*.04) : 0, 0.35);
+    this.threeSparkle.wet.rampTo(on ? Math.min(.30, .04 + glitter*.20 + air*.035) : 0, 0.35);
+    this.threeAir.frequency.rampTo(4600 + air * 5200, 0.32);
+    this.threeAir.gain.rampTo(on ? Math.min(5.5, .5 + air*3.6 + glitter*.8) : 0, 0.35);
   },
 };
 
@@ -773,7 +1285,7 @@ const Homepage = ({ onEnter }) => {
         </span>
       ))}
 
-      <h1 className="home-title">HOLD IT DOWN</h1>
+      <h1 className="home-title">{"HOLD IT DOWN".split("").map((ch,i)=><span key={i}>{ch===" "?"\u00A0":ch}</span>)}</h1>
       <div className="home-subtitle">— NEON SYNTH WORKSTATION —</div>
 
       <div className="home-piano">
@@ -819,13 +1331,26 @@ const Homepage = ({ onEnter }) => {
    ============================================================ */
 const DraggableWindow = ({ title, children, onClose, x, y, w, h, onMove, onResize, z, onFocus }) => {
   const dragRef = useRef(null);
+  const clamp = (nx, ny, nw=w, nh=h) => {
+    const margin = 8;
+    const vw = window.innerWidth || 1024;
+    const vh = window.innerHeight || 768;
+    const maxX = Math.max(margin, vw - Math.min(nw, vw - margin) - margin);
+    const maxY = Math.max(margin, vh - 72);
+    return {
+      x: Math.max(margin, Math.min(nx, maxX)),
+      y: Math.max(margin, Math.min(ny, maxY))
+    };
+  };
   const startDrag = (e) => {
     e.preventDefault(); onFocus();
     const t = e.touches ? e.touches[0] : e;
     const startX = t.clientX, startY = t.clientY, ox = x, oy = y;
     const move = (ev) => {
+      ev.preventDefault && ev.preventDefault();
       const m = ev.touches ? ev.touches[0] : ev;
-      onMove(ox + (m.clientX - startX), oy + (m.clientY - startY));
+      const c = clamp(ox + (m.clientX - startX), oy + (m.clientY - startY));
+      onMove(c.x, c.y);
     };
     const up = () => {
       window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
@@ -839,6 +1364,7 @@ const DraggableWindow = ({ title, children, onClose, x, y, w, h, onMove, onResiz
     const t = e.touches ? e.touches[0] : e;
     const startX = t.clientX, startY = t.clientY, ow = w, oh = h;
     const move = (ev) => {
+      ev.preventDefault && ev.preventDefault();
       const m = ev.touches ? ev.touches[0] : ev;
       onResize(Math.max(200, ow + (m.clientX - startX)), Math.max(120, oh + (m.clientY - startY)));
     };
@@ -849,9 +1375,10 @@ const DraggableWindow = ({ title, children, onClose, x, y, w, h, onMove, onResiz
     window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
     window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
   };
-
+  const c = clamp(x,y);
+  if (c.x !== x || c.y !== y) setTimeout(()=>onMove(c.x,c.y),0);
   return (
-    <div className="window" style={{left:x, top:y, width:w, height:h, zIndex:z}} onMouseDown={onFocus} onTouchStart={onFocus}>
+    <div className="window" style={{left:c.x, top:c.y, width:w, height:h, zIndex:z}} onMouseDown={onFocus} onTouchStart={onFocus}>
       <div className="window-header" onMouseDown={startDrag} onTouchStart={startDrag} ref={dragRef}>
         <span>{title}</span>
         <button className="window-close" onClick={onClose}>✕</button>
@@ -867,6 +1394,19 @@ const DraggableWindow = ({ title, children, onClose, x, y, w, h, onMove, onResiz
    ============================================================ */
 const Knob = ({ label, value, min=0, max=1, step=0.01, onChange, format }) => {
   const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const handler = (ev) => {
+      const dir = ev.detail?.direction;
+      const sign = dir === 'down' || dir === 'left' || dir === 'decrease' ? -1 : 1;
+      const jump = Math.max(step || 0.01, (max - min) / 24);
+      const nv = Math.max(min, Math.min(max, Math.round((value + sign * jump) / step) * step));
+      onChange(nv);
+    };
+    el.addEventListener('hid-keymap-adjust', handler);
+    return () => el.removeEventListener('hid-keymap-adjust', handler);
+  }, [value, min, max, step, onChange]);
   const start = (e) => {
     e.preventDefault();
     const t = e.touches ? e.touches[0] : e;
@@ -890,7 +1430,8 @@ const Knob = ({ label, value, min=0, max=1, step=0.01, onChange, format }) => {
   const deg = -130 + norm * 260;
   return (
     <div className="knob-wrap">
-      <div className="knob" ref={ref} onMouseDown={start} onTouchStart={start}>
+      <div className="knob" ref={ref} onMouseDown={start} onTouchStart={start}
+           data-keymap-target="true" data-keymap-kind="knob" data-keymap-label={label}>
         <div className="knob-indicator" style={{transform:`translateX(-50%) rotate(${deg}deg)`}}></div>
       </div>
       <div className="knob-label">{label}</div>
@@ -1028,37 +1569,49 @@ const PianoKeys = ({ height, startMidi, numKeys, activeMidis, litMidis, buildLit
 /* ============================================================
    FX RACK WINDOW
    ============================================================ */
-const FXRack = ({ fx, setFx }) => {
-  const set = (k) => (v) => setFx({ ...fx, [k]: v });
+const FXRack = ({ fx, setFx, padFx, setPadFx, currentPadIdx }) => {
+  const [scope, setScope] = useState('pad');
+  const activeFx = scope === 'pad' ? withDefaultPadFx(padFx) : fx;
+  const applyFx = (next) => scope === 'pad' ? setPadFx(withDefaultPadFx(next)) : setFx(next);
+  const set = (k) => (v) => applyFx({ ...activeFx, [k]: v });
   return (
     <div>
+      <div className="row">
+        <button className={'pill' + (scope==='pad'?' on':'')} onClick={()=>setScope('pad')}>SELECTED PAD FX</button>
+        <button className={'pill' + (scope==='global'?' on':'')} onClick={()=>setScope('global')}>GLOBAL KEYS FX</button>
+      </div>
+      <div className="small" style={{color:'var(--neon-dim)', marginBottom:8}}>
+        {scope === 'pad'
+          ? `Editing only Pad ${currentPadIdx + 1}. These EQ/FX settings will not copy to the other pads.`
+          : 'Editing the global keys/output FX layer.'}
+      </div>
       <div className="title-sm">— EQ —</div>
       <div className="grid-knobs">
-        <Knob label="LOW"  value={fx.eqLow}  min={-12} max={12} step={0.5} onChange={set('eqLow')}  format={v=>v.toFixed(1)+'dB'} />
-        <Knob label="MID"  value={fx.eqMid}  min={-12} max={12} step={0.5} onChange={set('eqMid')}  format={v=>v.toFixed(1)+'dB'} />
-        <Knob label="HI"   value={fx.eqHi}   min={-12} max={12} step={0.5} onChange={set('eqHi')}   format={v=>v.toFixed(1)+'dB'} />
-        <Knob label="CUT"  value={fx.filterCut} min={100} max={18000} step={50} onChange={set('filterCut')} format={v=>Math.round(v)+'Hz'} />
-        <Knob label="RES"  value={fx.filterRes} min={0} max={20} step={0.1} onChange={set('filterRes')} format={v=>v.toFixed(1)} />
+        <Knob label="LOW"  value={activeFx.eqLow}  min={-12} max={12} step={0.5} onChange={set('eqLow')}  format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="MID"  value={activeFx.eqMid}  min={-12} max={12} step={0.5} onChange={set('eqMid')}  format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="HI"   value={activeFx.eqHi}   min={-12} max={12} step={0.5} onChange={set('eqHi')}   format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="CUT"  value={activeFx.filterCut} min={100} max={18000} step={50} onChange={set('filterCut')} format={v=>Math.round(v)+'Hz'} />
+        <Knob label="RES"  value={activeFx.filterRes} min={0} max={20} step={0.1} onChange={set('filterRes')} format={v=>v.toFixed(1)} />
       </div>
       <div className="divider"></div>
       <div className="title-sm">— FX —</div>
       <div className="grid-knobs">
-        <Knob label="DRIVE"   value={fx.drive}   min={0} max={1} onChange={set('drive')} />
-        <Knob label="CHORUS"  value={fx.chorus}  min={0} max={1} onChange={set('chorus')} />
-        <Knob label="PHASER"  value={fx.phaser}  min={0} max={1} onChange={set('phaser')} />
-        <Knob label="TREM"    value={fx.tremolo} min={0} max={1} onChange={set('tremolo')} />
+        <Knob label="DRIVE"   value={activeFx.drive}   min={0} max={1} onChange={set('drive')} />
+        <Knob label="CHORUS"  value={activeFx.chorus}  min={0} max={1} onChange={set('chorus')} />
+        <Knob label="PHASER"  value={activeFx.phaser}  min={0} max={1} onChange={set('phaser')} />
+        <Knob label="TREM"    value={activeFx.tremolo} min={0} max={1} onChange={set('tremolo')} />
       </div>
       <div className="divider"></div>
       <div className="title-sm">— DELAY —</div>
       <div className="grid-knobs">
-        <Knob label="TIME" value={fx.delayTime} min={0.01} max={1.5} onChange={set('delayTime')} format={v=>v.toFixed(2)+'s'} />
-        <Knob label="FBACK" value={fx.delayFb}  min={0} max={0.95} onChange={set('delayFb')} />
-        <Knob label="WET"  value={fx.delayWet} min={0} max={1} onChange={set('delayWet')} />
+        <Knob label="TIME" value={activeFx.delayTime} min={0.01} max={1.5} onChange={set('delayTime')} format={v=>v.toFixed(2)+'s'} />
+        <Knob label="FBACK" value={activeFx.delayFb}  min={0} max={0.95} onChange={set('delayFb')} />
+        <Knob label="WET"  value={activeFx.delayWet} min={0} max={1} onChange={set('delayWet')} />
       </div>
       <div className="divider"></div>
       <div className="title-sm">— REVERB —</div>
       <div className="grid-knobs">
-        <Knob label="WET" value={fx.reverbWet} min={0} max={1} onChange={set('reverbWet')} />
+        <Knob label="WET" value={activeFx.reverbWet} min={0} max={1} onChange={set('reverbWet')} />
       </div>
     </div>
   );
@@ -1157,30 +1710,51 @@ const ChordBankWindow = ({ onSelectChord, rootFilter, setRootFilter }) => {
 /* ============================================================
    PADS / SAMPLER WINDOW
    ============================================================ */
+const PAD_PLAY_MODES = {
+  stack: { label:'STACK', help:'Tap pads to layer/stack them. Sampler Sustain decides whether they hold after release.' },
+  step: { label:'STEP SEQ', help:'Each tap retriggers one pad, smoothly moves to the next pad, and follows Loop or Ping-Pong order.' },
+  toggle: { label:'TOGGLE HOLD', help:'Tap a pad on for sustained playback, then tap the same pad again to turn it off.' },
+};
+const PAD_PLAY_ORDER = ['stack','step','toggle'];
+
 const PadsSamplerWindow = ({
   pads, setPads, currentPadIdx, setCurrentPadIdx,
   cycleEnabled, setCycleEnabled, cycleMode, setCycleMode,
   armed, setArmed, sustainHold, setSustainHold,
-  onTriggerPad, onLoadChord, buildMode, setBuildMode,
+  padPlayMode, setPadPlayMode,
+  onTriggerPad, onLoadChord, buildMode, setBuildMode, playingPads,
 }) => {
   const fileRef = useRef(null);
-  const arrowBoxRef = useRef(null);
   const [arrowFocused, setArrowFocused] = useState(false);
+  const [editorMode, setEditorMode] = useState(false);
+  const [draggingIdx, setDraggingIdx] = useState(null);
+  const selectedPad = pads[currentPadIdx] || {};
+  const padBase = (p={}) => {
+    const raw = p || {};
+    return { name:'Empty', enabled:true, type:'empty', data:null, chord:null, transpose:0, ...raw, fx: withDefaultPadFx(raw.fx) };
+  };
+  const updatePad = (i, patch) => setPads(prev => prev.map((p,idx)=>idx===i ? padBase({...p, ...patch}) : p));
+  const updateSelectedPadFx = (key, value) => updatePad(currentPadIdx, { fx: { ...withDefaultPadFx(selectedPad.fx), [key]: value } });
+  const resetSelectedPadFx = () => updatePad(currentPadIdx, { fx: withDefaultPadFx() });
 
-  const addPad = () => {
-    setPads([...pads, { name:'Empty', enabled:true, type:'empty', data:null, chord:null }]);
-  };
-  const removePad = () => {
-    if (pads.length > 1) setPads(pads.slice(0, -1));
-  };
+  const addPad = () => setPads([...pads, padBase()]);
+  const removePad = () => { if (pads.length > 1) setPads(pads.slice(0, -1)); };
   const clearAll = () => setPads([]);
   const duplicate = (i) => {
-    const copy = JSON.parse(JSON.stringify(pads[i]));
+    const copy = { ...pads[i] };
     setPads([...pads.slice(0,i+1), copy, ...pads.slice(i+1)]);
   };
-  const deletePad = (i) => setPads(pads.filter((_,j)=>j!==i));
-  const togglePad = (i) => {
-    const np = pads.slice(); np[i] = { ...np[i], enabled: !np[i].enabled }; setPads(np);
+  const deletePad = (i) => { setPads(pads.filter((_,j)=>j!==i)); setCurrentPadIdx(Math.max(0, Math.min(currentPadIdx, pads.length-2))); };
+  const togglePad = (i) => updatePad(i, { enabled: !pads[i].enabled });
+  const movePad = (from, to) => {
+    if (from === to || from == null || to == null) return;
+    setPads(prev => {
+      const np = prev.slice();
+      const [item] = np.splice(from,1);
+      np.splice(to,0,item);
+      return np;
+    });
+    setCurrentPadIdx(to);
   };
 
   const onUpload = (e) => {
@@ -1189,21 +1763,29 @@ const PadsSamplerWindow = ({
     files.forEach((file, k) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const data = ev.target.result; // ArrayBuffer
+        const data = ev.target.result;
         Tone.context.decodeAudioData(data.slice(0)).then(buffer => {
-          const np = pads.slice();
-          const padIdx = currentPadIdx + k;
-          if (padIdx < np.length) {
-            np[padIdx] = { ...np[padIdx], name: file.name.replace(/\.[^.]+$/,'').slice(0,20), type:'audio', data: buffer, chord:null };
-          } else {
-            np.push({ name: file.name.replace(/\.[^.]+$/,'').slice(0,20), enabled:true, type:'audio', data: buffer, chord:null });
-          }
-          setPads(np);
-        }).catch(()=>{});
+          setPads(prev => {
+            const np = prev.slice();
+            const padIdx = currentPadIdx + k;
+            const nextPad = padBase({ ...(np[padIdx]||{}), name:file.name.replace(/\.[^.]+$/,'').slice(0,20), type:'audio', data:buffer, chord:null, sourceType:file.type.startsWith('video/')?'video':'audio', transpose: np[padIdx]?.transpose || 0 });
+            if (padIdx < np.length) np[padIdx] = nextPad; else np.push(nextPad);
+            return np;
+          });
+        }).catch((err)=>{
+          alert('This browser could not extract playable audio from: '+file.name+'\nTry WAV, MP3, M4A, AAC, AIFF, or an MP4/MOV with standard AAC audio.');
+        });
       };
       reader.readAsArrayBuffer(file);
     });
     e.target.value = '';
+  };
+  const selectedTranspose = selectedPad.transpose || 0;
+  const setSelectedTranspose = (v) => updatePad(currentPadIdx, { transpose: Math.max(-24, Math.min(24, parseInt(v||0,10))) });
+  const activePadMode = PAD_PLAY_MODES[padPlayMode] ? padPlayMode : 'stack';
+  const cyclePadMode = () => {
+    const idx = PAD_PLAY_ORDER.indexOf(activePadMode);
+    setPadPlayMode(PAD_PLAY_ORDER[(idx + 1) % PAD_PLAY_ORDER.length]);
   };
 
   return (
@@ -1212,47 +1794,95 @@ const PadsSamplerWindow = ({
         <button className="pill" onClick={addPad}>+ ADD</button>
         <button className="pill" onClick={removePad}>− REM</button>
         <button className="pill" onClick={clearAll}>CLEAR ALL</button>
-        <button className="pill" onClick={()=>fileRef.current.click()}>UPLOAD</button>
-        <input ref={fileRef} type="file" accept="audio/*" multiple onChange={onUpload} style={{display:'none'}}/>
+        <button className="pill" onClick={()=>fileRef.current.click()}>UPLOAD AUDIO / VIDEO</button>
+        <input ref={fileRef} type="file" accept="audio/*,video/*,.mp3,.wav,.aif,.aiff,.m4a,.aac,.ogg,.flac,.mp4,.mov,.m4v,.webm" multiple onChange={onUpload} style={{display:'none'}}/>
       </div>
       <div className="row">
-        <button className={'pill' + (sustainHold?' on':'')} onClick={()=>setSustainHold(!sustainHold)}>SUSTAIN</button>
+        <button className={'pill accent ' + (padPlayMode==='stack'?'on':'')} onClick={cyclePadMode}>PAD MODE: {PAD_PLAY_MODES[activePadMode].label}</button>
+        <button className={'pill' + (sustainHold?' on':'')} onClick={()=>setSustainHold(!sustainHold)}>SAMPLER SUSTAIN</button>
         <button className={'pill accent' + (armed?' on':'')} onClick={()=>setArmed(!armed)}>● ARM</button>
-        <button className={'pill' + (cycleEnabled?' on':'')} onClick={()=>setCycleEnabled(!cycleEnabled)}>CYCLE</button>
+        <button className={'pill' + (cycleEnabled?' on':'')} onClick={()=>setCycleEnabled(!cycleEnabled)}>AUTO ADVANCE</button>
         <button className="pill" onClick={()=>setCycleMode(cycleMode==='loop'?'pingpong':'loop')}>{cycleMode==='loop'?'LOOP':'PING-PONG'}</button>
+        <span className="small" style={{color:'var(--neon-dim)'}}>Keys: ←/→ or [/], Enter plays selected pad</span>
+        <button className={'pill accent' + (editorMode?' on':'')} onClick={()=>setEditorMode(!editorMode)}>EDITOR MODE</button>
+      </div>
+      <div className="small" style={{color:'var(--neon-dim)', margin:'-2px 0 8px'}}>
+        {PAD_PLAY_MODES[activePadMode].help} Step Seq follows the current {cycleMode==='loop'?'Loop':'Ping-Pong'} setting.
       </div>
       <div className="row">
         <button className={'pill accent' + (buildMode?' on':'')} onClick={()=>setBuildMode(!buildMode)}>BUILD MODE</button>
-        <button className="pill" onClick={()=>onLoadChord(currentPadIdx)}>LOAD CHORD → PAD</button>
+        <button className="pill" onClick={()=>onLoadChord(currentPadIdx)}>LOAD CURRENT CHORD → SELECTED PAD</button>
       </div>
-      <div ref={arrowBoxRef}
-           onClick={()=>setArrowFocused(!arrowFocused)}
-           style={{border:'1px solid '+(arrowFocused?'var(--accent)':'var(--neon-dim)'), padding:'6px', display:'flex', gap:'8px', alignItems:'center', marginBottom:'8px', cursor:'pointer'}}>
+      <div onClick={()=>setArrowFocused(!arrowFocused)} style={{border:'1px solid '+(arrowFocused?'var(--accent)':'var(--neon-dim)'), padding:'6px', display:'flex', gap:'8px', alignItems:'center', marginBottom:'8px', cursor:'pointer'}}>
         <button className="pill" onClick={(e)=>{e.stopPropagation(); setCurrentPadIdx(Math.max(0,currentPadIdx-1))}}>◀</button>
-        <span className="small">{arrowFocused ? 'Keyboard ←/→ active' : 'Tap to focus ← →'}</span>
+        <span className="small">Selected pad: {currentPadIdx+1} / {pads.length} {arrowFocused ? '• Keyboard ←/→ active' : '• Tap to focus'}</span>
         <button className="pill" onClick={(e)=>{e.stopPropagation(); setCurrentPadIdx(Math.min(pads.length-1,currentPadIdx+1))}}>▶</button>
       </div>
+      {editorMode && (
+        <div className="sampler-editor">
+          <div className="title-sm">PAD EDITOR — PAD {currentPadIdx+1}</div>
+          <div className="row">
+            <label>Name</label>
+            <input className="mini-input" value={selectedPad.name || ''} onChange={e=>updatePad(currentPadIdx,{name:e.target.value.slice(0,20)})}/>
+            <label>Type</label><span className="small">{selectedPad.type || 'empty'}{selectedPad.sourceType==='video'?' • video audio':''}</span>
+          </div>
+          <div className="row">
+            <label>Transpose</label>
+            <button className="pill" onClick={()=>setSelectedTranspose(selectedTranspose-1)}>− SEMI</button>
+            <input className="mini-input" type="number" min="-24" max="24" value={selectedTranspose} onChange={e=>setSelectedTranspose(e.target.value)}/>
+            <button className="pill" onClick={()=>setSelectedTranspose(selectedTranspose+1)}>+ SEMI</button>
+            <button className="pill" onClick={()=>setSelectedTranspose(0)}>RESET</button>
+          </div>
+          <div className="small" style={{color:'var(--neon-dim)'}}>Transpose is stored per pad only. For audio/video audio it changes playback rate; for notes and chord shapes it shifts every note in that selected pad.</div>
+          <div className="divider"></div>
+          <div className="title-sm">PAD-SPECIFIC EQ / FX</div>
+          <div className="row">
+            <button className="pill" onClick={resetSelectedPadFx}>RESET PAD FX</button>
+            <span className="small" style={{color:'var(--neon-dim)'}}>Only Pad {currentPadIdx+1} receives these settings.</span>
+          </div>
+          <div className="grid-knobs">
+            <Knob label="LEVEL" value={withDefaultPadFx(selectedPad.fx).level} min={0} max={1.5} onChange={v=>updateSelectedPadFx('level', v)} />
+            <Knob label="LOW" value={withDefaultPadFx(selectedPad.fx).eqLow} min={-12} max={12} step={0.5} onChange={v=>updateSelectedPadFx('eqLow', v)} format={v=>v.toFixed(1)+'dB'} />
+            <Knob label="MID" value={withDefaultPadFx(selectedPad.fx).eqMid} min={-12} max={12} step={0.5} onChange={v=>updateSelectedPadFx('eqMid', v)} format={v=>v.toFixed(1)+'dB'} />
+            <Knob label="HI" value={withDefaultPadFx(selectedPad.fx).eqHi} min={-12} max={12} step={0.5} onChange={v=>updateSelectedPadFx('eqHi', v)} format={v=>v.toFixed(1)+'dB'} />
+            <Knob label="CUT" value={withDefaultPadFx(selectedPad.fx).filterCut} min={100} max={18000} step={50} onChange={v=>updateSelectedPadFx('filterCut', v)} format={v=>Math.round(v)+'Hz'} />
+            <Knob label="RES" value={withDefaultPadFx(selectedPad.fx).filterRes} min={0} max={20} step={0.1} onChange={v=>updateSelectedPadFx('filterRes', v)} />
+            <Knob label="DRIVE" value={withDefaultPadFx(selectedPad.fx).drive} min={0} max={1} onChange={v=>updateSelectedPadFx('drive', v)} />
+            <Knob label="CHORUS" value={withDefaultPadFx(selectedPad.fx).chorus} min={0} max={1} onChange={v=>updateSelectedPadFx('chorus', v)} />
+            <Knob label="PHASER" value={withDefaultPadFx(selectedPad.fx).phaser} min={0} max={1} onChange={v=>updateSelectedPadFx('phaser', v)} />
+            <Knob label="TREM" value={withDefaultPadFx(selectedPad.fx).tremolo} min={0} max={1} onChange={v=>updateSelectedPadFx('tremolo', v)} />
+            <Knob label="DLY" value={withDefaultPadFx(selectedPad.fx).delayWet} min={0} max={1} onChange={v=>updateSelectedPadFx('delayWet', v)} />
+            <Knob label="REV" value={withDefaultPadFx(selectedPad.fx).reverbWet} min={0} max={1} onChange={v=>updateSelectedPadFx('reverbWet', v)} />
+          </div>
+          <div className="divider"></div>
+          <div className="small" style={{color:'var(--neon-dim)'}}>To reorder pads, drag a pad while Editor Mode is on. The grid will reorient automatically as you slide.</div>
+        </div>
+      )}
       <div className="pads-grid" style={{gridTemplateColumns:`repeat(${Math.min(4, Math.max(1,pads.length))}, 1fr)`}}>
-        {pads.map((pad, i) => (
-          <div key={i}
-            className={'pad' + (i===currentPadIdx?' cycle-current':'') + (!pad.enabled?' muted':'') + (armed && i===currentPadIdx?' armed':'')}
-            onMouseDown={(e)=>{e.preventDefault(); onTriggerPad(i, true)}}
-            onMouseUp={()=>onTriggerPad(i, false)}
-            onMouseLeave={()=>onTriggerPad(i, false)}
-            onTouchStart={(e)=>{e.preventDefault(); onTriggerPad(i, true)}}
-            onTouchEnd={()=>onTriggerPad(i, false)}>
-            <div className="pad-toggle"
-                 onClick={(e)=>{e.stopPropagation(); togglePad(i)}}
-                 style={{background: pad.enabled ? 'var(--neon)' : '#000'}}></div>
+        {pads.map((padRaw, i) => {
+          const pad = padBase(padRaw);
+          return <div key={i}
+            draggable={editorMode}
+            onDragStart={(e)=>{ if(!editorMode) return; setDraggingIdx(i); e.dataTransfer.effectAllowed='move'; }}
+            onDragOver={(e)=>{ if(editorMode){ e.preventDefault(); e.dataTransfer.dropEffect='move'; } }}
+            onDrop={(e)=>{ e.preventDefault(); movePad(draggingIdx, i); setDraggingIdx(null); }}
+            onDragEnd={()=>setDraggingIdx(null)}
+            className={'pad' + (i===currentPadIdx?' cycle-current':'') + (playingPads && playingPads.has(i)?' playing':'') + (editorMode && i===currentPadIdx?' editor-selected':'') + (!pad.enabled?' muted':'') + (armed && i===currentPadIdx?' armed':'') + (draggingIdx===i?' dragging':'')}
+            onMouseDown={(e)=>{ e.preventDefault(); setCurrentPadIdx(i); if(!editorMode) onTriggerPad(i, true); }}
+            onMouseUp={()=>{ if(!editorMode) onTriggerPad(i, false); }}
+            onMouseLeave={()=>{ if(!editorMode) onTriggerPad(i, false); }}
+            onTouchStart={(e)=>{ setCurrentPadIdx(i); if(!editorMode){ e.preventDefault(); onTriggerPad(i, true); } }}
+            onTouchEnd={()=>{ if(!editorMode) onTriggerPad(i, false); }}>
+            <div className="pad-toggle" onClick={(e)=>{e.stopPropagation(); togglePad(i)}} style={{background: pad.enabled ? 'var(--neon)' : '#000'}}></div>
+            {editorMode && <div className="pad-drag-grip">⋮⋮</div>}
             <span className="pad-name">{i+1}. {pad.name}</span>
+            <span className="small" style={{fontSize:8,color:'var(--neon-dim)'}}>TR {pad.transpose>0?'+':''}{pad.transpose||0} • {pad.type}</span>
             <div className="row" style={{justifyContent:'center', gap:4, marginBottom:0}}>
-              <span style={{fontSize:8, color:'var(--neon-dim)'}}
-                    onClick={(e)=>{e.stopPropagation(); deletePad(i)}}>×</span>
-              <span style={{fontSize:8, color:'var(--neon-dim)'}}
-                    onClick={(e)=>{e.stopPropagation(); duplicate(i)}}>⎘</span>
+              <span style={{fontSize:8, color:'var(--neon-dim)'}} onClick={(e)=>{e.stopPropagation(); deletePad(i)}}>×</span>
+              <span style={{fontSize:8, color:'var(--neon-dim)'}} onClick={(e)=>{e.stopPropagation(); duplicate(i)}}>⎘</span>
             </div>
           </div>
-        ))}
+        })}
       </div>
     </div>
   );
@@ -1262,6 +1892,28 @@ const PadsSamplerWindow = ({
    MOD WHEEL WINDOW
    ============================================================ */
 const ModWheelWindow = ({ modValue, setModValue, pitchValue, setPitchValue, bendRange, setBendRange, glideMs, setGlideMs, modEffect, setModEffect }) => {
+  const modRef = useRef(null);
+  const pitchRef = useRef(null);
+  useEffect(() => {
+    const modEl = modRef.current;
+    const pitchEl = pitchRef.current;
+    const modHandler = (ev) => {
+      if (ev.detail?.phase !== 'down') return;
+      const sign = ev.detail?.direction === 'down' || ev.detail?.direction === 'left' ? -1 : 1;
+      setModValue(v => Math.max(0, Math.min(1, v + sign * 0.08)));
+    };
+    const pitchHandler = (ev) => {
+      const sign = ev.detail?.direction === 'down' || ev.detail?.direction === 'left' ? -1 : 1;
+      if (ev.detail?.phase === 'up') setPitchValue(0);
+      else setPitchValue(sign);
+    };
+    modEl && modEl.addEventListener('hid-keymap-adjust', modHandler);
+    pitchEl && pitchEl.addEventListener('hid-keymap-adjust', pitchHandler);
+    return () => {
+      modEl && modEl.removeEventListener('hid-keymap-adjust', modHandler);
+      pitchEl && pitchEl.removeEventListener('hid-keymap-adjust', pitchHandler);
+    };
+  }, [setModValue, setPitchValue]);
   const onMod = (e) => {
     const t = e.touches ? e.touches[0] : e;
     const startY = t.clientY, ov = modValue;
@@ -1299,13 +1951,15 @@ const ModWheelWindow = ({ modValue, setModValue, pitchValue, setPitchValue, bend
   return (
     <div className="modwheel-wrap">
       <div>
-        <div className="mod-slider" onMouseDown={onMod} onTouchStart={onMod}>
+        <div className="mod-slider" ref={modRef} onMouseDown={onMod} onTouchStart={onMod}
+             data-keymap-target="true" data-keymap-kind="modslider" data-keymap-label="MOD WHEEL">
           <div className="mod-slider-handle" style={{bottom: (modValue*100) + '%'}}></div>
         </div>
         <div className="mod-slider-label">MOD<br/>{(modValue*100|0)}%</div>
       </div>
       <div>
-        <div className="mod-slider" onMouseDown={onPitch} onTouchStart={onPitch}>
+        <div className="mod-slider" ref={pitchRef} onMouseDown={onPitch} onTouchStart={onPitch}
+             data-keymap-target="true" data-keymap-kind="modslider" data-keymap-label="PITCH BEND">
           <div className="mod-slider-handle" style={{bottom: (50 + pitchValue*50) + '%'}}></div>
         </div>
         <div className="mod-slider-label">PITCH<br/>{pitchValue>0?'+':''}{(pitchValue*bendRange).toFixed(1)}st</div>
@@ -1418,16 +2072,44 @@ const ThreeDSoundWindow = ({ enabled, setEnabled, mode, setMode, points, setPoin
     window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
   };
 
+  const makePoint = (flavor, isCenter=false) => {
+    const presets = {
+      'Shimmer':   {shimmer:.46, space:.68, delay:.30, feedback:.18, glitter:.34, air:.66, mix:.42, z:.52},
+      'Aurora':    {shimmer:.34, space:.82, delay:.38, feedback:.22, glitter:.24, air:.58, mix:.38, z:.68},
+      'Cosmic':    {shimmer:.42, space:.78, delay:.48, feedback:.25, glitter:.30, air:.55, mix:.40, z:.74},
+      'Halo':      {shimmer:.26, space:.72, delay:.22, feedback:.14, glitter:.16, air:.74, mix:.32, z:.46},
+      'Glitter':   {shimmer:.48, space:.56, delay:.18, feedback:.15, glitter:.52, air:.80, mix:.34, z:.38},
+      'Sub Sky':   {shimmer:.12, space:.80, delay:.45, feedback:.24, glitter:.10, air:.34, mix:.36, z:.86},
+      'Dream Echo':{shimmer:.32, space:.74, delay:.58, feedback:.27, glitter:.22, air:.54, mix:.38, z:.62},
+      'Vapor':     {shimmer:.28, space:.86, delay:.36, feedback:.20, glitter:.24, air:.70, mix:.34, z:.64},
+      'Crystal':   {shimmer:.52, space:.58, delay:.22, feedback:.16, glitter:.46, air:.84, mix:.36, z:.42},
+      'Phantom':   {shimmer:.22, space:.84, delay:.50, feedback:.25, glitter:.14, air:.48, mix:.32, z:.78},
+      'Air Bell':  {shimmer:.55, space:.55, delay:.16, feedback:.12, glitter:.42, air:.88, mix:.32, z:.34},
+      'Tape Choir':{shimmer:.24, space:.70, delay:.42, feedback:.23, glitter:.12, air:.44, mix:.34, z:.56},
+      'Center Shimmer':{shimmer:.38, space:.74, delay:.32, feedback:.18, glitter:.28, air:.64, mix:.36, z:.54},
+    };
+    const base = presets[flavor] || presets.Shimmer;
+    return { x:0.18 + Math.random()*0.64, y:0.18 + Math.random()*0.64, flavor, isCenter, ...base };
+  };
   const addPoint = () => {
     const flavors = ['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom','Air Bell','Tape Choir'];
     const fl = flavors[Math.floor(Math.random()*flavors.length)];
-    setPoints([...points, {
-      x: 0.2 + Math.random()*0.6, y: 0.2 + Math.random()*0.6,
-      flavor: fl, mix: 0.5 + Math.random()*0.4, isCenter: false
-    }]);
+    const next = [...points, makePoint(fl, false)];
+    setPoints(next);
+    setSelectedPoint(next.length-1);
   };
   const removePoint = () => {
-    if (points.length > 1) setPoints(points.slice(0,-1));
+    if (points.length > 1) {
+      const next = points.filter((_,i)=>i!==selectedPoint);
+      setPoints(next);
+      setSelectedPoint(Math.max(0, Math.min(selectedPoint, next.length-1)));
+    }
+  };
+  const updateSelected = (patch) => {
+    if (selectedPoint == null || !points[selectedPoint]) return;
+    const np = points.slice();
+    np[selectedPoint] = { ...np[selectedPoint], ...patch };
+    setPoints(np);
   };
 
   return (
@@ -1437,6 +2119,7 @@ const ThreeDSoundWindow = ({ enabled, setEnabled, mode, setMode, points, setPoin
         <button className="pill" onClick={addPoint}>+ POINT</button>
         <button className="pill" onClick={removePoint}>− POINT</button>
         <button className="pill accent" onClick={onDice}>🎲 DICE</button>
+        <button className="pill" onClick={()=>{ setPoints([{ x:0.5, y:0.5, z:0.54, flavor:'Center Shimmer', mix:0.36, shimmer:0.38, space:0.74, delay:0.32, feedback:0.18, glitter:0.28, air:0.64, isCenter:true }]); setSelectedPoint(0); }}>SOFT RESET</button>
       </div>
       <div className="threed-mode-row">
         {['stage','head','grid'].map(m => (
@@ -1450,20 +2133,346 @@ const ThreeDSoundWindow = ({ enabled, setEnabled, mode, setMode, points, setPoin
                className={'threed-orb' + (i===selectedPoint?' selected':'') + (p.isCenter?' center':'')}
                style={{left: (p.x*100)+'%', top: (p.y*100)+'%'}}
                onMouseDown={dragPoint(i)} onTouchStart={dragPoint(i)}
-               title={p.flavor}>
+               title={`${p.flavor} • X ${(p.x*100|0)} Y ${(p.y*100|0)} Depth ${((p.z ?? .5)*100|0)}`}>
+            <span className="threed-orb-depth" style={{width: (10 + ((p.z ?? .5)*22))+'px', opacity:.35 + ((p.z ?? .5)*.65)}}></span>
+            <span className="threed-orb-label">{i+1} {p.flavor}</span>
           </div>
         ))}
       </div>
       {selectedPoint != null && points[selectedPoint] && (
-        <div style={{marginTop:8}}>
-          <div className="title-sm">POINT: {points[selectedPoint].flavor}</div>
+        <div className="threed-panel">
+          <div className="title-sm">POINT {selectedPoint+1}: {points[selectedPoint].flavor}</div>
           <div className="row">
-            <label>Mix</label>
-            <input type="range" min="0" max="1" step="0.01" value={points[selectedPoint].mix}
-              onChange={e=>{const np = points.slice(); np[selectedPoint] = {...np[selectedPoint], mix:+e.target.value}; setPoints(np);}} />
-            <span>{(points[selectedPoint].mix*100|0)}%</span>
+            <label>Flavor</label>
+            <select className="mini-input" value={points[selectedPoint].flavor} onChange={e=>updateSelected({flavor:e.target.value})}>
+              {['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom','Air Bell','Tape Choir','Center Shimmer'].map(f=><option key={f} value={f}>{f}</option>)}
+            </select>
+            <span className="small" style={{color:'var(--neon-dim)'}}>X {(points[selectedPoint].x*100|0)} • Y {(points[selectedPoint].y*100|0)}</span>
           </div>
+          {[['mix','Mix'],['z','Depth'],['shimmer','Shimmer'],['space','Space'],['delay','Echo Time'],['feedback','Feedback'],['glitter','Glitter'],['air','Air']].map(([key,label]) => (
+            <div className="row" key={key}>
+              <label>{label}</label>
+              <input type="range" min="0" max="1" step="0.01" value={points[selectedPoint][key] ?? .5}
+                onChange={e=>updateSelected({[key]:+e.target.value})} />
+              <span>{(((points[selectedPoint][key] ?? .5)*100)|0)}%</span>
+            </div>
+          ))}
+          <div className="small" style={{color:'var(--neon-dim)'}}>Each orb is now gain-staged softly. Drag left/right for stereo position, up/down for brightness/space feel, and shape mix, shimmer, feedback, glitter, air, and depth without harsh clipping.</div>
         </div>
+      )}
+    </div>
+  );
+};
+
+
+
+/* ============================================================
+   MEDIA → SOUNDSCAPE WINDOW
+   ============================================================ */
+const MEDIA_SCALES = {
+  Ionian:[0,2,4,5,7,9,11,12,14],
+  Dorian:[0,2,3,5,7,9,10,12,14],
+  Lydian:[0,2,4,6,7,9,11,12,14],
+  Minor:[0,2,3,5,7,8,10,12,15],
+  Pentatonic:[0,2,4,7,9,12,14,16],
+  WholeTone:[0,2,4,6,8,10,12,14],
+  Dream:[0,2,5,7,9,12,14,17]
+};
+const wait = (ms) => new Promise(res => setTimeout(res, ms));
+const mediaClamp = (v, lo=0, hi=1) => Math.max(lo, Math.min(hi, Number.isFinite(+v) ? +v : lo));
+const rgbToHsvMedia = (r,g,b) => {
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min;
+  let h=0;
+  if (d) {
+    if (max===r) h=((g-b)/d + (g<b?6:0))/6;
+    else if (max===g) h=((b-r)/d + 2)/6;
+    else h=((r-g)/d + 4)/6;
+  }
+  return {h, s:max ? d/max : 0, v:max};
+};
+const drawMediaFrameToData = (source, tiny, tinyCtx) => {
+  tinyCtx.clearRect(0,0,tiny.width,tiny.height);
+  tinyCtx.drawImage(source, 0, 0, tiny.width, tiny.height);
+  return tinyCtx.getImageData(0,0,tiny.width,tiny.height).data;
+};
+const readMediaByteSignature = async (file) => {
+  const max = Math.min(file.size || 0, 524288);
+  const buf = await file.slice(0, max).arrayBuffer();
+  const arr = new Uint8Array(buf);
+  let sum=0, sum2=0, hash=2166136261, stride=Math.max(1, Math.floor(arr.length / 12000));
+  const sequence = [];
+  for (let i=0; i<arr.length; i+=stride) {
+    const v = arr[i]; sum += v; sum2 += v*v;
+    hash ^= v; hash = Math.imul(hash, 16777619) >>> 0;
+    if (sequence.length < 64) sequence.push((v + i) % 16);
+  }
+  const n = Math.max(1, Math.ceil(arr.length / stride));
+  const mean = sum / n / 255;
+  const variance = Math.max(0, (sum2/n) - Math.pow(sum/n,2)) / (255*255);
+  return { mean, variance, hash, seed:hash, sequence, bytesRead:arr.length };
+};
+const analyzeMediaFrames = (frameData, byteSig) => {
+  if (!frameData.length) return null;
+  const w = 96, h = 72;
+  let bright=0, bright2=0, sat=0, hueX=0, hueY=0, edge=0, texture=0, warm=0, sym=0, dark=0, light=0;
+  let pixels = 0;
+  const palette = new Map();
+  const swatchTotals = new Map();
+  let motion = 0, motionCount = 0;
+  frameData.forEach((data, fi) => {
+    const prev = fi > 0 ? frameData[fi-1] : null;
+    for (let y=0; y<h; y++) {
+      for (let x=0; x<w; x++) {
+        const idx = (y*w+x)*4;
+        const r=data[idx], g=data[idx+1], b=data[idx+2];
+        const lum = (0.2126*r + 0.7152*g + 0.0722*b)/255;
+        const hsv = rgbToHsvMedia(r,g,b);
+        bright += lum; bright2 += lum*lum; sat += hsv.s;
+        hueX += Math.cos(hsv.h * Math.PI * 2) * hsv.s;
+        hueY += Math.sin(hsv.h * Math.PI * 2) * hsv.s;
+        warm += mediaClamp((r - b + 255) / 510);
+        if (lum < .18) dark++; if (lum > .82) light++;
+        if (x > 0) {
+          const li = idx-4;
+          const l2 = (0.2126*data[li] + 0.7152*data[li+1] + 0.0722*data[li+2])/255;
+          const d = Math.abs(lum-l2); edge += d > .13 ? 1 : 0; texture += d;
+        }
+        if (y > 0) {
+          const ui = idx-w*4;
+          const u2 = (0.2126*data[ui] + 0.7152*data[ui+1] + 0.0722*data[ui+2])/255;
+          const d = Math.abs(lum-u2); edge += d > .13 ? 1 : 0; texture += d;
+        }
+        if (x < w/2) {
+          const mi = (y*w + (w-1-x))*4;
+          const ml = (0.2126*data[mi] + 0.7152*data[mi+1] + 0.0722*data[mi+2])/255;
+          sym += 1 - Math.abs(lum - ml);
+        }
+        if (prev) {
+          const pr=prev[idx], pg=prev[idx+1], pb=prev[idx+2];
+          motion += (Math.abs(r-pr)+Math.abs(g-pg)+Math.abs(b-pb))/(255*3);
+          motionCount++;
+        }
+        const key = `${r>>5}${g>>5}${b>>5}`;
+        palette.set(key, (palette.get(key)||0)+1);
+        const sw = `${(r>>4)<<4},${(g>>4)<<4},${(b>>4)<<4}`;
+        const t = swatchTotals.get(sw) || {n:0,r:0,g:0,b:0};
+        t.n++; t.r+=r; t.g+=g; t.b+=b; swatchTotals.set(sw,t);
+        pixels++;
+      }
+    }
+  });
+  const denom = Math.max(1, pixels);
+  const brightness = bright/denom;
+  const contrast = Math.sqrt(Math.max(0, bright2/denom - brightness*brightness)) * 2.4;
+  let hue = Math.atan2(hueY, hueX)/(Math.PI*2); if (hue < 0) hue += 1;
+  const paletteSpread = mediaClamp(palette.size / 420);
+  const symmetry = mediaClamp(sym / Math.max(1, frameData.length*h*w/2));
+  const colorRows = Array.from(swatchTotals.values()).sort((a,b)=>b.n-a.n).slice(0,8).map(t => ({
+    hex:'#' + [t.r/t.n,t.g/t.n,t.b/t.n].map(v=>Math.round(v).toString(16).padStart(2,'0')).join(''),
+    weight:t.n/denom
+  }));
+  const features = {
+    brightness: mediaClamp(brightness),
+    contrast: mediaClamp(contrast),
+    saturation: mediaClamp(sat/denom),
+    hue: mediaClamp(hue),
+    edge: mediaClamp(edge / Math.max(1, denom*2)),
+    texture: mediaClamp(texture / Math.max(1, denom*2) * 3.3),
+    symmetry,
+    motion: mediaClamp((motion / Math.max(1, motionCount)) * 2.8),
+    warmth: mediaClamp(warm/denom),
+    paletteSpread,
+    darkRatio: dark/denom,
+    lightRatio: light/denom,
+    byteMean: byteSig.mean || 0,
+    byteVariance: mediaClamp((byteSig.variance || 0) * 6)
+  };
+  features.complexity = mediaClamp((features.edge*.28)+(features.texture*.22)+(features.contrast*.18)+(features.paletteSpread*.18)+(features.motion*.14));
+  return { features, palette: colorRows, bytes: byteSig };
+};
+const buildMediaSignature = (analysis, file) => {
+  const f = analysis.features;
+  const rootPc = Math.round((f.hue * 11 + f.byteMean * 7 + f.warmth * 3)) % 12;
+  let scaleName = 'Dream';
+  if (f.saturation > .68 && f.brightness > .55) scaleName = 'Lydian';
+  else if (f.brightness < .34) scaleName = 'Minor';
+  else if (f.motion > .42) scaleName = 'Dorian';
+  else if (f.paletteSpread > .62) scaleName = 'WholeTone';
+  else if (f.contrast < .22 && f.symmetry > .58) scaleName = 'Pentatonic';
+  else if (f.warmth > .58) scaleName = 'Ionian';
+  const scale = MEDIA_SCALES[scaleName] || MEDIA_SCALES.Dream;
+  const baseMidi = 36 + rootPc + (f.brightness > .62 ? 12 : 0);
+  const notes = scale.map(iv => baseMidi + 12 + iv).filter(n=>n>=36 && n<=90);
+  const chord = [baseMidi, baseMidi + scale[2], baseMidi + scale[4], baseMidi + scale[6] || baseMidi+14].filter(n=>n>=24 && n<=84);
+  const tempo = Math.round(34 + f.motion*38 + f.complexity*32 + f.byteVariance*18);
+  const seqBase = analysis.bytes.sequence && analysis.bytes.sequence.length ? analysis.bytes.sequence : [0,2,4,1,5,3,6,2];
+  const sequence = seqBase.map((v,i)=>(v + i + Math.round(f.hue*12)) % notes.length).slice(0,48);
+  return {
+    name:file?.name || 'Media Soundscape',
+    rootName: NOTE_NAMES[rootPc], rootMidi:baseMidi+12, scaleName, notes, chord, tempo, sequence,
+    seed: analysis.bytes.seed || 1, palette:analysis.palette, features:f,
+    description: `${NOTE_NAMES[rootPc]} ${scaleName} • ${tempo} BPM • ${file?.type || 'media'} • ${(file?.size ? (file.size/1024/1024).toFixed(2) : '0.00')} MB`
+  };
+};
+const MediaMeter = ({ label, value }) => (
+  <div className="media-meter">
+    <div className="media-meter-label"><span>{label}</span><span>{Math.round((value||0)*100)}%</span></div>
+    <div className="media-meter-track"><div className="media-meter-fill" style={{width: `${Math.round((value||0)*100)}%`}}></div></div>
+  </div>
+);
+const MediaSoundscapeWindow = () => {
+  const [fileInfo, setFileInfo] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
+  const [signature, setSignature] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState('Upload a photo, video, or GIF to build a data-driven soundscape.');
+  const [playing, setPlaying] = useState(false);
+  const [settings, setSettings] = useState({ presence:.52, shimmer:.42, space:.68, texture:.46, motion:.34, softness:.78, tempo:54 });
+
+  useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); AE.stopMediaSoundscape(); }, [previewUrl]);
+  useEffect(() => { if (playing) AE.updateMediaSoundscape(settings); }, [settings, playing]);
+
+  const captureImageFrames = async (url) => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = url;
+    await new Promise((resolve, reject) => { img.onload=resolve; img.onerror=reject; });
+    const tiny = document.createElement('canvas'); tiny.width = 96; tiny.height = 72;
+    const tinyCtx = tiny.getContext('2d', { willReadFrequently:true });
+    const frames = [];
+    for (let i=0; i<8; i++) {
+      frames.push(new Uint8ClampedArray(drawMediaFrameToData(img, tiny, tinyCtx)));
+      await wait(115);
+    }
+    return frames;
+  };
+  const seekVideo = (video, time) => new Promise(resolve => {
+    const done = () => { video.removeEventListener('seeked', done); resolve(); };
+    video.addEventListener('seeked', done, { once:true });
+    try { video.currentTime = time; } catch(e) { resolve(); }
+  });
+  const captureVideoFrames = async (url) => {
+    const video = document.createElement('video');
+    video.src = url; video.muted = true; video.playsInline = true; video.preload = 'auto'; video.crossOrigin = 'anonymous';
+    await new Promise((resolve, reject) => { video.onloadedmetadata=resolve; video.onerror=reject; });
+    const tiny = document.createElement('canvas'); tiny.width = 96; tiny.height = 72;
+    const tinyCtx = tiny.getContext('2d', { willReadFrequently:true });
+    const frames = [];
+    const dur = Number.isFinite(video.duration) && video.duration > .2 ? video.duration : 3;
+    const count = Math.min(14, Math.max(6, Math.round(dur * 2)));
+    for (let i=0; i<count; i++) {
+      await seekVideo(video, Math.min(dur - .05, (dur * (i+.5)) / count));
+      frames.push(new Uint8ClampedArray(drawMediaFrameToData(video, tiny, tinyCtx)));
+    }
+    return frames;
+  };
+  const analyzeFile = async (file, url) => {
+    setBusy(true); setStatus('Reading pixels, palette, motion, texture, and file fingerprint…');
+    try {
+      const byteSig = await readMediaByteSignature(file);
+      const frames = file.type.startsWith('video/') ? await captureVideoFrames(url) : await captureImageFrames(url);
+      const result = analyzeMediaFrames(frames, byteSig);
+      const sig = buildMediaSignature(result, file);
+      setAnalysis(result); setSignature(sig);
+      setSettings(prev => ({
+        ...prev,
+        shimmer: mediaClamp(.20 + result.features.saturation*.36 + result.features.lightRatio*.12),
+        space: mediaClamp(.42 + result.features.symmetry*.34 + (1-result.features.contrast)*.12),
+        texture: mediaClamp(.24 + result.features.texture*.42 + result.features.edge*.18),
+        motion: mediaClamp(.20 + result.features.motion*.52 + result.features.byteVariance*.12),
+        softness: mediaClamp(.66 + result.features.symmetry*.18 - result.features.edge*.08),
+        tempo: sig.tempo
+      }));
+      setStatus(`Built soundscape signature: ${sig.description}`);
+      return sig;
+    } catch(err) {
+      console.error(err);
+      setStatus('Could not analyze that media file. Try another image/video/GIF format.');
+    } finally { setBusy(false); }
+  };
+  const onFile = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    AE.stopMediaSoundscape(); setPlaying(false);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url); setFileInfo({ name:file.name, type:file.type || 'unknown', size:file.size });
+    setAnalysis(null); setSignature(null);
+    await analyzeFile(file, url);
+  };
+  const start = async () => {
+    if (!signature) { setStatus('Analyze a media file first.'); return; }
+    await Tone.start(); AE.init();
+    AE.startMediaSoundscape(signature, settings);
+    setPlaying(true); setStatus('Soundscape playing from analyzed media data.');
+  };
+  const stop = () => { AE.stopMediaSoundscape(); setPlaying(false); setStatus('Soundscape stopped.'); };
+  const change = (key, value) => setSettings(prev => ({...prev, [key]: key==='tempo' ? Math.round(value) : value }));
+  const isVideo = fileInfo && String(fileInfo.type).startsWith('video/');
+
+  return (
+    <div className="media-soundscape">
+      <div className="media-upload-zone">
+        <input type="file" accept="image/*,video/*,.gif" onChange={onFile} />
+        <button className="pill" onClick={()=> previewUrl && fileInfo && setStatus('Re-select the same file to refresh the analysis frames.')}>MEDIA DATA</button>
+        <span className="media-status">{busy ? 'ANALYZING…' : status}</span>
+      </div>
+      <div className="media-preview">
+        {!previewUrl && <div className="media-preview-empty">PHOTO / VIDEO / GIF PREVIEW</div>}
+        {previewUrl && isVideo && <video src={previewUrl} controls muted loop playsInline />}
+        {previewUrl && !isVideo && <img src={previewUrl} alt="Uploaded media preview" />}
+      </div>
+      <div className="row">
+        <button className={'pill accent' + (playing?' on':'')} disabled={!signature || busy} onClick={playing ? stop : start}>{playing ? '■ STOP SOUNDSCAPE' : '▶ PLAY SOUNDSCAPE'}</button>
+        <button className="pill" disabled={!signature || busy} onClick={()=>signature && AE.startMediaSoundscape(signature, settings)}>RENDER AGAIN</button>
+        {signature && <span className="small" style={{color:'var(--neon)'}}>{signature.rootName} {signature.scaleName} / {settings.tempo} BPM</span>}
+      </div>
+      {analysis && signature && (
+        <Fragment>
+          <div className="media-signature">
+            <div className="title-sm">DATA SIGNATURE</div>
+            <div>{signature.description}</div>
+            <div className="media-palette">{signature.palette.map((p,i)=><span key={i} className="media-swatch" style={{background:p.hex}} title={`${p.hex} ${(p.weight*100).toFixed(1)}%`}></span>)}</div>
+          </div>
+          <div className="media-analysis-grid">
+            <MediaMeter label="Brightness" value={analysis.features.brightness}/>
+            <MediaMeter label="Contrast" value={analysis.features.contrast}/>
+            <MediaMeter label="Saturation" value={analysis.features.saturation}/>
+            <MediaMeter label="Hue Field" value={analysis.features.hue}/>
+            <MediaMeter label="Edges" value={analysis.features.edge}/>
+            <MediaMeter label="Texture" value={analysis.features.texture}/>
+            <MediaMeter label="Symmetry" value={analysis.features.symmetry}/>
+            <MediaMeter label="Motion" value={analysis.features.motion}/>
+            <MediaMeter label="Palette Spread" value={analysis.features.paletteSpread}/>
+            <MediaMeter label="File Fingerprint" value={analysis.features.byteVariance}/>
+          </div>
+          <div className="divider"></div>
+          <div className="title-sm">SOUNDSCAPE CONTROLS</div>
+          {[
+            ['presence','Presence'],['space','Space'],['shimmer','Shimmer'],['texture','Texture'],['motion','Motion'],['softness','Softness']
+          ].map(([key,label]) => (
+            <div className="row" key={key}>
+              <label>{label}</label>
+              <input type="range" min="0" max="1" step="0.01" value={settings[key]} onChange={e=>change(key,+e.target.value)} />
+              <span>{Math.round(settings[key]*100)}%</span>
+            </div>
+          ))}
+          <div className="row">
+            <label>Tempo</label>
+            <input type="range" min="24" max="132" step="1" value={settings.tempo} onChange={e=>change('tempo',+e.target.value)} />
+            <span>{settings.tempo} BPM</span>
+          </div>
+          <div className="media-map-list">
+            <div>Brightness → octave, filter openness, note glow.</div>
+            <div>Hue + palette → root note, scale color, chord extension.</div>
+            <div>Edges/texture → sparkle density and FM detail.</div>
+            <div>Symmetry → reverb length, drone stability, softness.</div>
+            <div>Video/GIF motion → pulse rate and moving shimmer response.</div>
+            <div>File fingerprint → deterministic note order, so two similar photos still differ.</div>
+          </div>
+        </Fragment>
       )}
     </div>
   );
@@ -1502,6 +2511,79 @@ const ColorCustomize = ({ theme, setTheme }) => {
       </div>
       <div className="divider"></div>
       <button className="pill accent" onClick={randomize}>🎲 RANDOMIZE</button>
+    </div>
+  );
+};
+
+
+/* ============================================================
+   CUSTOM KEYBOARD MAPPER WINDOW
+   ============================================================ */
+const ShortcutMapperWindow = ({
+  mappings, setMappings,
+  selectedKey, setSelectedKey,
+  editMode, setEditMode,
+  assignDirection, setAssignDirection
+}) => {
+  const selectedMap = selectedKey ? mappings[selectedKey] : null;
+  const keyLabel = (code) => MAC_KEY_LABELS[code] || code;
+
+  const startAssign = () => {
+    if (!selectedKey) return alert('Tap a key on the Mac keyboard layout first.');
+    refreshKeymapTargets();
+    setEditMode(true);
+  };
+  const clearSelected = () => {
+    if (!selectedKey) return;
+    const next = { ...mappings };
+    delete next[selectedKey];
+    setMappings(next);
+  };
+  const clearAll = () => {
+    if (!confirm('Clear all custom keyboard mappings?')) return;
+    setMappings({});
+  };
+
+  return (
+    <div className="keymap-window-root" data-keymap-ignore="true">
+      <div className="keymap-toolbar">
+        <button className={'pill accent' + (editMode ? ' on' : '')} onClick={editMode ? ()=>setEditMode(false) : startAssign}>⌨ EDIT ASSIGN</button>
+        <button className={'pill' + (assignDirection==='up' ? ' on' : '')} onClick={()=>setAssignDirection('up')}>↑ / +</button>
+        <button className={'pill' + (assignDirection==='down' ? ' on' : '')} onClick={()=>setAssignDirection('down')}>↓ / −</button>
+        <button className="pill" onClick={clearSelected}>CLEAR KEY</button>
+        <button className="pill accent" onClick={clearAll}>CLEAR ALL</button>
+      </div>
+      <div className="keymap-status">
+        <b>Selected key:</b> {selectedKey ? keyLabel(selectedKey) : 'none'}<br/>
+        <b>Mapped to:</b> {selectedMap ? `${selectedMap.label} ${selectedMap.kind === 'button' ? '(click)' : selectedMap.direction === 'down' ? '(decrease/down)' : '(increase/up)'}` : 'not assigned'}<br/>
+        {editMode ? 'Now tap any highlighted button, pad, slider, knob, piano key, or currently visible function to assign it.' : 'Tap a key, choose a direction for sliders/knobs, then press EDIT ASSIGN.'}
+      </div>
+      {editMode && <div className="keymap-edit-banner">KEYBOARD MAP EDITING — tap any highlighted control to assign it</div>}
+      <div className="divider"></div>
+      <div className="mac-keyboard">
+        {MAC_KEY_ROWS.map((row, ri) => (
+          <div key={ri} className="mac-key-row">
+            {row.map(([code,label,w]) => (
+              <button key={code}
+                className={'mac-key ' + (w || '') + (selectedKey===code ? ' selected' : '') + (mappings[code] ? ' mapped' : '')}
+                onClick={()=>setSelectedKey(code)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">ACTIVE CUSTOM ASSIGNMENTS</div>
+      <div className="mapping-list">
+        {Object.keys(mappings).length === 0 && <div className="small" style={{color:'var(--neon-dim)'}}>No custom mappings yet.</div>}
+        {Object.entries(mappings).map(([code, m]) => (
+          <div className="mapping-row" key={code}>
+            <span><span className="mapping-keycap">{keyLabel(code)}</span> → {m.label}</span>
+            <span style={{color:'var(--neon-dim)'}}>{m.kind === 'button' ? 'click' : m.direction === 'down' ? 'down / −' : 'up / +'}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -1590,6 +2672,7 @@ const App = () => {
 
   // -- top bar
   const [topbarOpen, setTopbarOpen] = useState(true);
+  const [topbarHeight, setTopbarHeight] = useState(104);
   const [masterVol, setMasterVol] = useState(0.7);
 
   // -- windows
@@ -1597,7 +2680,7 @@ const App = () => {
   const [topZ, setTopZ] = useState(10);
   const openWindow = (id, defaults) => {
     setTopZ(z => z+1);
-    setWindows(w => ({ ...w, [id]: { ...defaults, ...w[id], open: true, z: topZ+1 } }));
+    setWindows(w => ({ ...w, [id]: { ...defaults, ...w[id], open: true, z: topZ+1, x: Math.max(8, Math.min(((w[id]&&w[id].x)||defaults.x), window.innerWidth-80)), y: Math.max(8, Math.min(((w[id]&&w[id].y)||defaults.y), window.innerHeight-80)) } }));
   };
   const closeWindow = (id) => setWindows(w => ({ ...w, [id]: { ...w[id], open: false } }));
   const focusWindow = (id) => setWindows(w => { setTopZ(z=>z+1); return { ...w, [id]: { ...w[id], z: topZ+1 } }; });
@@ -1606,6 +2689,14 @@ const App = () => {
     if (windows[id] && windows[id].open) closeWindow(id);
     else openWindow(id, defaults);
   };
+
+  // -- custom wireless keyboard mapper
+  const [customMappings, setCustomMappings] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('holdItDownCustomKeyMappings') || '{}'); } catch(e) { return {}; }
+  });
+  const [keyMapperSelected, setKeyMapperSelected] = useState(null);
+  const [keyMapperEditMode, setKeyMapperEditMode] = useState(false);
+  const [keyMapperDirection, setKeyMapperDirection] = useState('up');
 
   // -- FX
   const [fx, setFx] = useState({
@@ -1628,7 +2719,7 @@ const App = () => {
 
   // -- pads / sampler
   const [pads, setPads] = useState(
-    Array.from({length:8}).map((_,i)=>({ name:'Empty', enabled:true, type:'empty', data:null, chord:null }))
+    Array.from({length:8}).map((_,i)=>({ name:'Empty', enabled:true, type:'empty', data:null, chord:null, transpose:0, fx: withDefaultPadFx() }))
   );
   const [currentPadIdx, setCurrentPadIdx] = useState(0);
   const [cycleEnabled, setCycleEnabled] = useState(false);
@@ -1636,6 +2727,7 @@ const App = () => {
   const cycleDir = useRef(1);
   const [armed, setArmed] = useState(false);
   const [sustainHold, setSustainHold] = useState(true);
+  const [padPlayMode, setPadPlayMode] = useState('stack');
   const [playingPads, setPlayingPads] = useState(new Set());
 
   // -- mod wheel / pitch bend
@@ -1649,7 +2741,7 @@ const App = () => {
   const [threedOn, setThreedOn] = useState(false);
   const [threedMode, setThreedMode] = useState('grid');
   const [threedPoints, setThreedPoints] = useState([
-    { x:0.5, y:0.5, flavor:'Center', mix:0.7, isCenter:true }
+    { x:0.5, y:0.5, z:0.54, flavor:'Center Shimmer', mix:0.36, shimmer:0.38, space:0.74, delay:0.32, feedback:0.18, glitter:0.28, air:0.64, isCenter:true }
   ]);
   const [threedSelected, setThreedSelected] = useState(0);
 
@@ -1688,6 +2780,61 @@ const App = () => {
     r.setProperty('--ui-contrast', theme.contrast);
   }, [theme]);
 
+  // ===== Custom keyboard mapper persistence + assignment capture =====
+  useEffect(() => {
+    try { localStorage.setItem('holdItDownCustomKeyMappings', JSON.stringify(customMappings)); } catch(e){}
+  }, [customMappings]);
+
+  useEffect(() => {
+    refreshKeymapTargets();
+  }, [windows, topbarOpen, topbarHeight, hideKeys, pads, threedOn, threedPoints, modValue, pitchValue, fx, sd]);
+
+  useEffect(() => {
+    if (!keyMapperEditMode || !keyMapperSelected) {
+      document.body.classList.remove('keymap-editing');
+      return;
+    }
+    document.body.classList.add('keymap-editing');
+    refreshKeymapTargets();
+    let captured = false;
+    const pick = (e) => {
+      if (e.target.closest('.keymap-window-root')) return;
+      const el = e.target.closest('[data-keymap-target="true"]');
+      if (!el || el.closest('.keymap-window-root')) return;
+      e.preventDefault(); e.stopPropagation();
+      captured = true;
+      const info = getKeymapTargetInfo(el);
+      const mapping = {
+        targetId: el.dataset.mapId,
+        kind: info.kind,
+        label: info.label,
+        direction: keyMapperDirection,
+        createdAt: Date.now()
+      };
+      setCustomMappings(m => ({ ...m, [keyMapperSelected]: mapping }));
+      setKeyMapperEditMode(false);
+    };
+    const blockClick = (e) => { if (captured) { e.preventDefault(); e.stopPropagation(); captured = false; } };
+    window.addEventListener('pointerdown', pick, true);
+    window.addEventListener('click', blockClick, true);
+    return () => {
+      document.body.classList.remove('keymap-editing');
+      window.removeEventListener('pointerdown', pick, true);
+      window.removeEventListener('click', blockClick, true);
+    };
+  }, [keyMapperEditMode, keyMapperSelected, keyMapperDirection]);
+
+  const executeCustomMapping = useCallback((event, phase='down') => {
+    const code = keyEventCode(event);
+    const mapping = customMappings[code];
+    if (!mapping || keyMapperEditMode) return false;
+    const isAdjust = ['range','knob','modslider','select'].includes(mapping.kind);
+    if (event.repeat && !isAdjust) { event.preventDefault(); return true; }
+    event.preventDefault();
+    const handled = runMappedTarget(mapping, phase);
+    return handled;
+  }, [customMappings, keyMapperEditMode]);
+
   // ===== Apply FX =====
   useEffect(() => {
     if (audioReady) AE.setFX(fx);
@@ -1701,8 +2848,10 @@ const App = () => {
   // ===== Apply pitch bend / mod =====
   useEffect(() => {
     if (!audioReady) return;
-    AE.applyDetune(pitchValue * bendRange * 100); // cents
-    // Mod effect modulates FX layer
+    const bendCents = pitchValue * bendRange * 100;
+    AE.applyDetune(bendCents, glideMs / 1000); // cents, smoothed by Glide control
+    AE.applySamplerPitch(bendCents, glideMs / 1000); // uploaded audio/video pads glide with pitch bend too
+    // Mod effect modulates the shared FX layer, which sampler pads also feed through
     if (modEffect === 'Shimmer Reverb') AE.setFX({ ...fx, reverbWet: Math.max(fx.reverbWet, modValue*0.8) });
     if (modEffect === 'Tape Wow') AE.setFX({ ...fx, tremolo: Math.max(fx.tremolo, modValue*0.6) });
     if (modEffect === 'Filter Sweep') AE.setFX({ ...fx, filterCut: 600 + (1-modValue)*16000 });
@@ -1711,13 +2860,12 @@ const App = () => {
     if (modEffect === 'Tremolo Cosmic') AE.setFX({ ...fx, tremolo: Math.max(fx.tremolo, modValue), phaser: Math.max(fx.phaser, modValue) });
     if (modEffect === 'Chorus Wide') AE.setFX({ ...fx, chorus: Math.max(fx.chorus, modValue*0.9) });
     if (modEffect === 'Auto Wah') AE.setFX({ ...fx, filterCut: 400 + modValue*4000, filterRes: 4 + modValue*8 });
-  }, [pitchValue, bendRange, modValue, modEffect, audioReady]);
+  }, [pitchValue, bendRange, glideMs, modValue, modEffect, audioReady]);
 
   // ===== Apply 3D state =====
   useEffect(() => {
     if (!audioReady) return;
-    const mainPt = threedPoints[threedSelected] || threedPoints[0] || {x:0.5,y:0.5,mix:0.5};
-    AE.set3D(threedOn, (mainPt.x-0.5)*2, (mainPt.y-0.5)*2, 0, mainPt.mix, 0.4);
+    AE.set3D(threedOn, threedPoints, threedSelected);
   }, [threedOn, threedPoints, threedSelected, audioReady]);
 
   // ===== Note handlers =====
@@ -1737,7 +2885,7 @@ const App = () => {
     // armed recording? we don't actually record samples here, but we add the note to current pad
     if (armed && pads[currentPadIdx]) {
       const np = pads.slice();
-      np[currentPadIdx] = { ...np[currentPadIdx], type:'note', data: m, name: midiToName(m) };
+      np[currentPadIdx] = { ...np[currentPadIdx], type:'note', data: m, chord:null, name: midiToName(m), transpose: np[currentPadIdx]?.transpose || 0 };
       setPads(np);
     }
   }, [audioReady, octaveShift, transposeShift, voiceMode, currentPatch, buildMode, armed, pads, currentPadIdx]);
@@ -1808,49 +2956,157 @@ const App = () => {
   };
   const clearShape = () => { setBuildShape(new Set()); setLitMidis(new Set()); };
 
-  // ===== Pad triggers =====
+  // ===== Pad triggers + smooth wireless keyboard sequencing =====
   const padNodeRefs = useRef({});
+  const padReleaseMs = 140;
+  const padOverlapMs = 55;
+
+  const stopPadSmooth = useCallback((i, fadeSeconds=0.14) => {
+    const ref = padNodeRefs.current[i];
+    if (!ref) return;
+    if (ref.type === 'audio') {
+      try {
+        if (ref.pitchRaf) cancelAnimationFrame(ref.pitchRaf);
+        ref.gain.gain.cancelScheduledValues(Tone.now());
+        ref.gain.gain.rampTo(0, fadeSeconds);
+        setTimeout(() => {
+          try { ref.player.stop(); ref.player.dispose(); ref.gain.dispose(); AE.disposePadFxChain(ref.chain); } catch(e){}
+        }, Math.max(40, fadeSeconds*1000 + 30));
+      } catch(e){}
+      delete AE.padPlayers[i];
+    } else if (Array.isArray(ref.notes)) {
+      setTimeout(() => {
+        ref.notes.forEach(m => AE.noteOff(m));
+      }, Math.max(20, fadeSeconds*650));
+      setTimeout(() => AE.disposePadFxChain(ref.chain), Math.max(900, fadeSeconds*1000 + 700));
+    }
+    delete padNodeRefs.current[i];
+    setPlayingPads(s => { const ns = new Set(s); ns.delete(i); return ns; });
+  }, []);
+
+  const startPadSmooth = useCallback((i) => {
+    const pad = pads[i];
+    if (!pad || !pad.enabled) return false;
+    const tr = pad.transpose || 0;
+    setPlayingPads(s => { const ns = new Set(s); ns.add(i); return ns; });
+    if (pad.type === 'audio' && pad.data) {
+      stopPadSmooth(i, 0.05);
+      const chain = AE.createPadFxChain(pad.fx);
+      const gain = new Tone.Gain(0).connect(chain ? chain.input : AE.voicesInput());
+      const player = new Tone.Player(pad.data).connect(gain);
+      const baseRate = Math.pow(2, tr/12);
+      player.playbackRate = baseRate * Math.pow(2, (AE.samplerPitchCents || 0) / 1200);
+      player.start(Tone.now() + 0.005);
+      gain.gain.rampTo(1, 0.11);
+      const ref = { type:'audio', player, gain, chain, baseRate };
+      padNodeRefs.current[i] = ref;
+      AE.padPlayers[i] = ref;
+      return true;
+    }
+    if (pad.type === 'note' && typeof pad.data === 'number') {
+      const note = pad.data + tr;
+      const chain = AE.createPadFxChain(pad.fx);
+      AE.noteOn(note, currentPatch, chain ? chain.input : null);
+      padNodeRefs.current[i] = { type:'note', notes:[note], chain };
+      return true;
+    }
+    if (pad.type === 'chord' && Array.isArray(pad.chord)) {
+      const notes = pad.chord.map(m => m + tr);
+      const chain = AE.createPadFxChain(pad.fx);
+      notes.forEach(m => AE.noteOn(m, currentPatch, chain ? chain.input : null));
+      padNodeRefs.current[i] = { type:'chord', notes, chain };
+      return true;
+    }
+    setPlayingPads(s => { const ns = new Set(s); ns.delete(i); return ns; });
+    return false;
+  }, [pads, currentPatch, stopPadSmooth]);
+
+  useEffect(() => {
+    if (!audioReady) return;
+    Object.entries(padNodeRefs.current).forEach(([idx, ref]) => {
+      const pad = pads[Number(idx)];
+      if (ref && ref.chain && pad) AE.updatePadFxChain(ref.chain, pad.fx);
+      if (ref && ref.type === 'audio' && pad) {
+        const nextBaseRate = Math.pow(2, ((pad.transpose || 0) / 12));
+        ref.baseRate = nextBaseRate;
+        AE.applySamplerPitch(AE.samplerPitchCents || 0, 0.03);
+      }
+    });
+  }, [pads, audioReady]);
+
+  const getSequencedPadIndex = useCallback((direction=1, baseIdx=currentPadIdx) => {
+    if (!pads.length) return 0;
+    const usable = pads.map((p,i)=>({p,i})).filter(({p}) => p && p.enabled && p.type !== 'empty');
+    const pool = usable.length ? usable.map(x=>x.i) : pads.map((_,i)=>i);
+    const currentPos = Math.max(0, pool.indexOf(baseIdx));
+    if (cycleMode === 'pingpong') {
+      const dir = direction || cycleDir.current || 1;
+      let nextPos = currentPos + dir;
+      if (nextPos >= pool.length) { nextPos = Math.max(0, pool.length-2); cycleDir.current = -1; }
+      else if (nextPos < 0) { nextPos = Math.min(pool.length-1, 1); cycleDir.current = 1; }
+      else { cycleDir.current = dir; }
+      return pool[nextPos] ?? currentPadIdx;
+    }
+    const nextPos = (currentPos + direction + pool.length) % pool.length;
+    return pool[nextPos] ?? currentPadIdx;
+  }, [pads, currentPadIdx, cycleMode]);
+
+  const transitionToPad = useCallback((nextIdx) => {
+    if (nextIdx == null || nextIdx < 0 || nextIdx >= pads.length) return;
+    const previous = Object.keys(padNodeRefs.current).map(Number).filter(i => i !== nextIdx);
+    setCurrentPadIdx(nextIdx);
+    const started = startPadSmooth(nextIdx);
+    if (started) {
+      setTimeout(() => previous.forEach(i => stopPadSmooth(i, padReleaseMs/1000)), padOverlapMs);
+    }
+  }, [pads.length, startPadSmooth, stopPadSmooth]);
+
+  const sequencePad = useCallback((direction=1) => {
+    const nextIdx = getSequencedPadIndex(direction);
+    transitionToPad(nextIdx);
+  }, [getSequencedPadIndex, transitionToPad]);
+
   const triggerPad = useCallback((i, on) => {
     const pad = pads[i];
     if (!pad || !pad.enabled) return;
-    if (on) {
-      setPlayingPads(s => { const ns = new Set(s); ns.add(i); return ns; });
-      if (pad.type === 'audio' && pad.data) {
-        const player = new Tone.Player(pad.data).connect(AE.voicesInput());
-        player.start();
-        padNodeRefs.current[i] = player;
-      } else if (pad.type === 'note' && typeof pad.data === 'number') {
-        AE.noteOn(pad.data, currentPatch);
-      } else if (pad.type === 'chord' && Array.isArray(pad.chord)) {
-        pad.chord.forEach(m => AE.noteOn(m, currentPatch));
+    const mode = PAD_PLAY_MODES[padPlayMode] ? padPlayMode : 'stack';
+
+    if (mode === 'toggle') {
+      if (!on) return;
+      setCurrentPadIdx(i);
+      if (padNodeRefs.current[i]) {
+        stopPadSmooth(i, padReleaseMs/1000);
+      } else {
+        startPadSmooth(i);
       }
-      if (cycleEnabled) {
-        // advance current pad
-        if (cycleMode === 'loop') {
-          setCurrentPadIdx(idx => (idx+1) % pads.length);
-        } else {
-          setCurrentPadIdx(idx => {
-            let ni = idx + cycleDir.current;
-            if (ni >= pads.length) { ni = pads.length-2; cycleDir.current = -1; }
-            else if (ni < 0) { ni = 1; cycleDir.current = 1; }
-            return ni;
-          });
-        }
-      }
-    } else {
-      if (!sustainHold) {
-        setPlayingPads(s => { const ns = new Set(s); ns.delete(i); return ns; });
-        if (pad.type === 'audio' && padNodeRefs.current[i]) {
-          try { padNodeRefs.current[i].stop(); padNodeRefs.current[i].dispose(); } catch(e){}
-          delete padNodeRefs.current[i];
-        } else if (pad.type === 'note' && typeof pad.data === 'number') {
-          AE.noteOff(pad.data);
-        } else if (pad.type === 'chord' && Array.isArray(pad.chord)) {
-          pad.chord.forEach(m => AE.noteOff(m));
-        }
-      }
+      return;
     }
-  }, [pads, currentPatch, cycleEnabled, cycleMode, sustainHold]);
+
+    if (mode === 'step') {
+      if (!on) return;
+      setCurrentPadIdx(i);
+      const previous = Object.keys(padNodeRefs.current).map(Number).filter(idx => idx !== i);
+      const started = startPadSmooth(i);
+      if (started) {
+        setTimeout(() => previous.forEach(idx => stopPadSmooth(idx, padReleaseMs/1000)), padOverlapMs);
+      }
+      const ni = getSequencedPadIndex(1, i);
+      setCurrentPadIdx(ni);
+      return;
+    }
+
+    // STACK mode: every pad can be layered. Sampler Sustain controls release behavior.
+    if (on) {
+      setCurrentPadIdx(i);
+      startPadSmooth(i);
+      if (cycleEnabled) {
+        const ni = getSequencedPadIndex(1, i);
+        setCurrentPadIdx(ni);
+      }
+    } else if (!sustainHold) {
+      stopPadSmooth(i, padReleaseMs/1000);
+    }
+  }, [pads, padPlayMode, cycleEnabled, sustainHold, startPadSmooth, stopPadSmooth, getSequencedPadIndex]);
 
   // ===== Load chord into pad =====
   const loadChordToPad = useCallback((idx) => {
@@ -1862,22 +3118,26 @@ const App = () => {
     if (!chord.length) return;
     const np = pads.slice();
     if (idx >= np.length) {
-      np.push({ name: 'Chord '+(chord.length), enabled:true, type:'chord', data:null, chord });
+      np.push({ name: 'Chord '+(chord.length), enabled:true, type:'chord', data:null, chord, transpose:0, fx: withDefaultPadFx() });
     } else {
-      np[idx] = { ...np[idx], type:'chord', chord, name:'Chord '+(chord.length) };
+      np[idx] = { ...np[idx], type:'chord', data:null, chord, name:'Chord '+(chord.length), transpose: np[idx]?.transpose || 0, fx: withDefaultPadFx(np[idx]?.fx) };
     }
     setPads(np);
   }, [buildShape, litMidis, pads]);
 
   // ===== 3D dice randomize =====
   const dice3D = () => {
-    const flavors = ['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom'];
+    const flavors = ['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom','Air Bell','Tape Choir'];
+    const preset = {
+      Shimmer:{shimmer:.46,space:.68,delay:.30,feedback:.18,glitter:.34,air:.66,mix:.42,z:.52}, Aurora:{shimmer:.34,space:.82,delay:.38,feedback:.22,glitter:.24,air:.58,mix:.38,z:.68}, Cosmic:{shimmer:.42,space:.78,delay:.48,feedback:.25,glitter:.30,air:.55,mix:.40,z:.74}, Halo:{shimmer:.26,space:.72,delay:.22,feedback:.14,glitter:.16,air:.74,mix:.32,z:.46}, Glitter:{shimmer:.48,space:.56,delay:.18,feedback:.15,glitter:.52,air:.80,mix:.34,z:.38}, 'Sub Sky':{shimmer:.12,space:.80,delay:.45,feedback:.24,glitter:.10,air:.34,mix:.36,z:.86}, 'Dream Echo':{shimmer:.32,space:.74,delay:.58,feedback:.27,glitter:.22,air:.54,mix:.38,z:.62}, Vapor:{shimmer:.28,space:.86,delay:.36,feedback:.20,glitter:.24,air:.70,mix:.34,z:.64}, Crystal:{shimmer:.52,space:.58,delay:.22,feedback:.16,glitter:.46,air:.84,mix:.36,z:.42}, Phantom:{shimmer:.22,space:.84,delay:.50,feedback:.25,glitter:.14,air:.48,mix:.32,z:.78}, 'Air Bell':{shimmer:.55,space:.55,delay:.16,feedback:.12,glitter:.42,air:.88,mix:.32,z:.34}, 'Tape Choir':{shimmer:.24,space:.70,delay:.42,feedback:.23,glitter:.12,air:.44,mix:.34,z:.56}
+    };
     const n = 3 + Math.floor(Math.random()*4);
-    setThreedPoints(Array.from({length:n}).map((_,i)=>({
-      x: 0.1+Math.random()*0.8, y: 0.1+Math.random()*0.8,
-      flavor: flavors[Math.floor(Math.random()*flavors.length)],
-      mix: 0.3+Math.random()*0.6, isCenter: i===0
-    })));
+    const pts = Array.from({length:n}).map((_,i)=>{
+      const flavor = flavors[Math.floor(Math.random()*flavors.length)];
+      return { x:0.1+Math.random()*0.8, y:0.1+Math.random()*0.8, flavor, isCenter:i===0, ...preset[flavor] };
+    });
+    setThreedPoints(pts);
+    setThreedSelected(0);
   };
 
   // ===== Save / Open project =====
@@ -1889,8 +3149,9 @@ const App = () => {
       octaveShift, transposeShift,
       masterVol, fx, sd,
       pads: pads.map(p => ({ ...p, data: p.type==='audio' ? null : p.data })), // can't serialize audio buffers
-      bendRange, glideMs, modEffect, modValue,
+      bendRange, glideMs, modEffect, modValue, padPlayMode,
       threedOn, threedMode, threedPoints,
+      customMappings,
       theme,
       buildShape: [...buildShape],
     };
@@ -1928,9 +3189,11 @@ const App = () => {
           typeof d.glideMs === 'number' && setGlideMs(d.glideMs);
           d.modEffect && setModEffect(d.modEffect);
           typeof d.modValue === 'number' && setModValue(d.modValue);
+          d.padPlayMode && setPadPlayMode(d.padPlayMode);
           typeof d.threedOn === 'boolean' && setThreedOn(d.threedOn);
           d.threedMode && setThreedMode(d.threedMode);
           Array.isArray(d.threedPoints) && setThreedPoints(d.threedPoints);
+          d.customMappings && setCustomMappings(d.customMappings);
           d.theme && setTheme(d.theme);
           Array.isArray(d.buildShape) && setBuildShape(new Set(d.buildShape));
         } catch(err) { alert('Failed to load: '+ err.message); }
@@ -1943,7 +3206,8 @@ const App = () => {
   // ===== Keyboard shortcuts =====
   useEffect(() => {
     const down = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (isTypingTarget(e.target)) return;
+      if (executeCustomMapping(e, 'down')) return;
       const k = e.key.toLowerCase();
       if ((e.metaKey || e.ctrlKey) && k === 's') { e.preventDefault(); saveProject(); return; }
       if ((e.metaKey || e.ctrlKey) && k === 'o') { e.preventDefault(); openProject(); return; }
@@ -1958,8 +3222,9 @@ const App = () => {
       if (k === '.') { transposeUp(); return; }
       if (e.key === 'ArrowUp')   { setPitchValue(1); return; }
       if (e.key === 'ArrowDown') { setPitchValue(-1); return; }
-      if (e.key === 'ArrowLeft'  && !e.repeat) { setCurrentPadIdx(i => Math.max(0,i-1)); return; }
-      if (e.key === 'ArrowRight' && !e.repeat) { setCurrentPadIdx(i => Math.min(pads.length-1,i+1)); return; }
+      if ((e.key === 'ArrowLeft' || k === '[') && !e.repeat) { e.preventDefault(); sequencePad(-1); return; }
+      if ((e.key === 'ArrowRight' || k === ']') && !e.repeat) { e.preventDefault(); sequencePad(1); return; }
+      if (e.key === 'Enter' && !e.repeat) { e.preventDefault(); transitionToPad(currentPadIdx); return; }
       if (k === ' ') { e.preventDefault(); setPlaying(p=>!p); if (!playing) playBuildShape(); else stopAll(); return; }
       if (k === 'b') { setBuildMode(b=>!b); return; }
       if (k === 'c') { clearShape(); return; }
@@ -1972,6 +3237,8 @@ const App = () => {
       if (pi >= 0 && pi < pads.length && !e.repeat) { triggerPad(pi, true); }
     };
     const up = (e) => {
+      if (isTypingTarget(e.target)) return;
+      if (executeCustomMapping(e, 'up')) return;
       const k = e.key.toLowerCase();
       if (e.key === 'Shift') { setSustain(false); return; }
       if (k in KEY_MAP_NOTES) { noteOffRaw(KEY_MAP_NOTES[k]); return; }
@@ -1983,22 +3250,26 @@ const App = () => {
     window.addEventListener('keydown', down);
     window.addEventListener('keyup', up);
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
-  }, [noteOnRaw, noteOffRaw, transposeUp, transposeDown, playing, pads, triggerPad]);
+  }, [noteOnRaw, noteOffRaw, transposeUp, transposeDown, playing, pads, triggerPad, sequencePad, transitionToPad, currentPadIdx, executeCustomMapping]);
 
   // ===== Topbar resize =====
   const onTopbarResize = (e) => {
     e.preventDefault();
     const t = e.touches ? e.touches[0] : e;
-    const startY = t.clientY, oh = topbarOpen ? 1 : 0;
+    const startY = t.clientY, oh = topbarHeight;
     const move = (ev) => {
+      ev.preventDefault && ev.preventDefault();
       const m = ev.touches ? ev.touches[0] : ev;
-      const dy = m.clientY - startY;
-      setTopbarOpen(dy > 0 || oh === 1);
+      const next = Math.max(0, Math.min(220, oh + (m.clientY - startY)));
+      setTopbarHeight(next);
+      setTopbarOpen(next > 18);
     };
     const up = () => {
       window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
     };
     window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
   };
 
   // ===== Enter app =====
@@ -2035,14 +3306,14 @@ const App = () => {
   return (
     <div className="app">
       {/* ============= TOPBAR ============= */}
-      <div className="topbar" style={{maxHeight: topbarOpen ? 200 : 0, padding: topbarOpen ? '6px 10px' : '0 10px'}}>
+      <div className="topbar" style={{maxHeight: topbarOpen ? topbarHeight : 0, padding: topbarOpen ? '6px 10px' : '0 10px'}}>
         <div className="top-group">
           <span className="top-label">VOL</span>
           <input type="range" min="0" max="1" step="0.01" value={masterVol} onChange={e=>setMasterVol(+e.target.value)} className="vol-slider" />
           <span className="small">{(masterVol*100|0)}</span>
         </div>
         <div className="top-group">
-          <button className="top-btn danger" onClick={()=>{ AE.killAll(); setActiveMidis(new Set()); setSustainHeld(new Set()); }}>⏻ KILL</button>
+          <button className="top-btn danger" onClick={()=>{ AE.killAll(); AE.stopMediaSoundscape(); setActiveMidis(new Set()); setSustainHeld(new Set()); }}>⏻ KILL</button>
           <button className={'top-btn'+(sustain?' active':'')} onClick={()=>setSustain(!sustain)}>SUSTAIN</button>
         </div>
         <div className="top-group">
@@ -2069,6 +3340,8 @@ const App = () => {
           <button className="top-btn" onClick={saveProject}>💾 SAVE</button>
           <button className="top-btn" onClick={openProject}>📂 OPEN</button>
           <button className="top-btn" onClick={()=>toggleWindow('shortcuts', {x:100,y:100,w:520,h:420})}>⌨ KEYS</button>
+          <button className="top-btn" onClick={()=>toggleWindow('keymap', {x:90,y:90,w:760,h:520})}>⌨ MAP</button>
+          <button className="top-btn" onClick={()=>toggleWindow('media', {x:120,y:80,w:560,h:620})}>▧ MEDIA</button>
         </div>
         <div className="topbar-handle" onMouseDown={onTopbarResize} onTouchStart={onTopbarResize}></div>
       </div>
@@ -2082,8 +3355,13 @@ const App = () => {
           <BanksWindow bankId={bankId} setBankId={setBankId} patchIdx={patchIdx} setPatchIdx={setPatchIdx} voiceMode={voiceMode} setVoiceMode={setVoiceMode} />,
           {x:20,y:20,w:340,h:380})}
         {renderWindow('fx', 'FX RACK',
-          <FXRack fx={fx} setFx={setFx} />,
-          {x:380,y:20,w:340,h:480})}
+          <FXRack
+            fx={fx} setFx={setFx}
+            padFx={pads[currentPadIdx]?.fx}
+            setPadFx={(nextFx)=>setPads(prev=>prev.map((p,i)=>i===currentPadIdx ? { ...p, fx: withDefaultPadFx(nextFx) } : p))}
+            currentPadIdx={currentPadIdx}
+          />,
+          {x:380,y:20,w:340,h:520})}
         {renderWindow('sd', 'SOUND DESIGN',
           <SoundDesign sd={sd} setSd={setSd} />,
           {x:740,y:20,w:340,h:380})}
@@ -2098,9 +3376,11 @@ const App = () => {
             cycleMode={cycleMode} setCycleMode={setCycleMode}
             armed={armed} setArmed={setArmed}
             sustainHold={sustainHold} setSustainHold={setSustainHold}
+            padPlayMode={padPlayMode} setPadPlayMode={setPadPlayMode}
             onTriggerPad={triggerPad}
             onLoadChord={loadChordToPad}
             buildMode={buildMode} setBuildMode={setBuildMode}
+            playingPads={playingPads}
           />,
           {x:460,y:420,w:480,h:400})}
         {renderWindow('mod', 'MOD / PITCH',
@@ -2121,12 +3401,23 @@ const App = () => {
             onDice={dice3D}
           />,
           {x:520,y:60,w:440,h:480})}
+        {renderWindow('media', '▧ MEDIA SOUNDSCAPE',
+          <MediaSoundscapeWindow />,
+          {x:120,y:80,w:560,h:620})}
         {renderWindow('color', 'COLOR',
           <ColorCustomize theme={theme} setTheme={setTheme} />,
           {x:80,y:80,w:320,h:400})}
         {renderWindow('shortcuts', 'KEYBOARD SHORTCUTS',
           <ShortcutsWindow />,
           {x:120,y:80,w:560,h:440})}
+        {renderWindow('keymap', '⌨ CUSTOM KEYBOARD MAP',
+          <ShortcutMapperWindow
+            mappings={customMappings} setMappings={setCustomMappings}
+            selectedKey={keyMapperSelected} setSelectedKey={setKeyMapperSelected}
+            editMode={keyMapperEditMode} setEditMode={setKeyMapperEditMode}
+            assignDirection={keyMapperDirection} setAssignDirection={setKeyMapperDirection}
+          />,
+          {x:90,y:90,w:760,h:520})}
       </div>
 
       {/* ============= FEATURE BAR ============= */}
@@ -2138,6 +3429,8 @@ const App = () => {
         <button className={'feature-btn'+(ws('pads').open?' open':'')} onClick={()=>toggleWindow('pads', {x:460,y:420,w:480,h:400})}>PADS / SAMPLER</button>
         <button className={'feature-btn'+(ws('mod').open?' open':'')} onClick={()=>toggleWindow('mod', {x:980,y:20,w:420,h:380})}>MOD WHEEL</button>
         <button className={'feature-btn special'+(ws('3d').open?' open':'')} onClick={()=>toggleWindow('3d', {x:520,y:60,w:440,h:480})}>✦ 3D SOUND</button>
+        <button className={'feature-btn special'+(ws('media').open?' open':'')} onClick={()=>toggleWindow('media', {x:120,y:80,w:560,h:620})}>▧ MEDIA SOUND</button>
+        <button className={'feature-btn'+(ws('keymap').open?' open':'')} onClick={()=>toggleWindow('keymap', {x:90,y:90,w:760,h:520})}>⌨ MAP</button>
         <div style={{flex:1}}></div>
         <span className="small" style={{color:'var(--neon-dim)'}}>{BANKS[bankId].label} / {BANKS[bankId].patches[patchIdx].name}</span>
       </div>
