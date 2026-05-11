@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>Hold It Down — designed by Mario Garcia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #000000;
+    --neon: #00ffd0;
+    --neon-dim: #00b89a;
+    --accent: #ff4dd2;
+    --text: #d8fff8;
+    --white-key: #f4f9f6;
+    --black-key: #0a1413;
+    --ui-bright: 1;
+    --ui-contrast: 1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; filter: brightness(var(--ui-bright)) contrast(var(--ui-contrast)); }
+  body { user-select: none; -webkit-user-select: none; touch-action: none; }
+  button { background: transparent; color: inherit; font-family: inherit; cursor: pointer; border: none; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; }
+  input[type="range"]::-webkit-slider-runnable-track { height: 3px; background: var(--neon-dim); }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 8px var(--neon); margin-top: -6px; cursor: pointer; }
+  input[type="range"]::-moz-range-track { height: 3px; background: var(--neon-dim); }
+  input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 8px var(--neon); border: none; cursor: pointer; }
+
+  /* ============================== HOMEPAGE ============================== */
+  .home { position: fixed; inset: 0; background: #000; overflow: hidden; }
+  .home-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,208,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,208,0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    transform: perspective(500px) rotateX(60deg) translateY(80px);
+    transform-origin: bottom center;
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
+    animation: gridMove 8s linear infinite;
+  }
+  @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 50px; } }
+  .home-title {
+    position: absolute; top: 4vh; left: 50%; transform: translateX(-50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.4rem, 4vw, 3.2rem);
+    color: var(--neon);
+    text-shadow: 0 0 10px var(--neon), 0 0 24px var(--neon-dim), 0 0 50px var(--neon-dim);
+    letter-spacing: 0.1em;
+    text-align: center;
+    z-index: 5;
+  }
+  .home-subtitle {
+    position: absolute; top: calc(4vh + clamp(1.6rem,4.5vw,3.8rem)); left: 50%; transform: translateX(-50%);
+    font-family: 'VT323', monospace; font-size: clamp(0.8rem, 1.6vw, 1.2rem);
+    color: var(--neon-dim); letter-spacing: 0.4em; z-index: 5;
+  }
+  .home-credit {
+    position: absolute; bottom: 1.2vh; left: 50%; transform: translateX(-50%);
+    font-family: 'VT323', monospace; font-size: 12px; color: var(--neon-dim);
+    letter-spacing: 0.2em; opacity: 0.7; z-index: 5;
+  }
+  .home-piano {
+    position: absolute; top: 50%; left: 50%;
+    transform-style: preserve-3d;
+    transform: translate(-50%, -55%) perspective(800px) rotateX(45deg) rotateZ(-2deg);
+    width: min(70vw, 700px); height: min(20vh, 180px);
+    z-index: 3;
+    animation: pianoFloat 6s ease-in-out infinite;
+  }
+  @keyframes pianoFloat {
+    0%, 100% { transform: translate(-50%, -55%) perspective(800px) rotateX(45deg) rotateZ(-2deg) translateY(0); }
+    50% { transform: translate(-50%, -55%) perspective(800px) rotateX(45deg) rotateZ(-2deg) translateY(-12px); }
+  }
+  .home-piano .key {
+    position: absolute; bottom: 0; background: linear-gradient(to bottom, #001a16, #002420);
+    border: 1px solid var(--neon); box-shadow: inset 0 -8px 12px rgba(0,255,208,0.15), 0 0 8px rgba(0,255,208,0.3);
+    transform-style: preserve-3d;
+  }
+  .home-piano .key.white { width: 6.66%; height: 100%; }
+  .home-piano .key.black { width: 4%; height: 60%; background: #000; border: 1px solid var(--neon); box-shadow: 0 0 10px var(--neon-dim); z-index: 2; }
+  .home-piano .key-glow {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 30%;
+    background: linear-gradient(to top, var(--neon), transparent);
+    opacity: 0.35; pointer-events: none;
+  }
+
+  .home-pads {
+    position: absolute; top: 50%; right: 4vw; transform: translateY(-50%);
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    z-index: 2;
+  }
+  .home-pad {
+    width: 60px; height: 60px; border: 2px solid var(--neon-dim);
+    background: #050a09; box-shadow: 0 0 8px rgba(0,255,208,0.25) inset;
+    border-radius: 4px; transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+  .home-pad.lit { background: rgba(0,255,208,0.5); box-shadow: 0 0 20px var(--neon), inset 0 0 12px var(--neon); transform: translateZ(-8px) scale(0.94); border-color: var(--neon); }
+
+  .home-knobs {
+    position: absolute; bottom: 6vh; left: 3vw;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    width: min(36vw, 320px);
+    z-index: 2;
+  }
+  .home-knob {
+    width: 60px; height: 60px; border: 2px solid var(--neon); border-radius: 50%;
+    position: relative; background: radial-gradient(circle, #001f1b, #000);
+    box-shadow: 0 0 10px var(--neon-dim);
+  }
+  .home-knob::after { content: ""; position: absolute; top: 6px; left: 50%; width: 2px; height: 20px; background: var(--neon); transform-origin: center 24px; transform: translateX(-50%); box-shadow: 0 0 6px var(--neon); }
+  .home-slider { width: 4px; height: 50px; background: var(--neon-dim); border-radius: 2px; position: relative; }
+  .home-slider::after { content: ""; position: absolute; left: -8px; width: 20px; height: 8px; background: var(--neon); box-shadow: 0 0 10px var(--neon); }
+  .home-viz {
+    position: absolute; bottom: 6vh; right: 3vw;
+    width: min(30vw, 280px); height: 90px;
+    border: 2px solid var(--neon); box-shadow: 0 0 18px rgba(0,255,208,0.3), inset 0 0 16px rgba(0,255,208,0.15);
+    background: #000;
+    z-index: 2;
+  }
+  .home-viz canvas { width: 100%; height: 100%; display: block; }
+  .home-symbol {
+    position: absolute; font-family: 'Share Tech Mono', monospace; color: var(--neon);
+    text-shadow: 0 0 8px var(--neon); pointer-events: none; opacity: 0.7;
+    font-size: 18px; z-index: 1;
+    animation: floatSym 14s linear infinite;
+  }
+  @keyframes floatSym {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% { transform: translate(var(--dx,30px), var(--dy,-60px)) rotate(360deg); opacity: 0; }
+  }
+  .home-enter {
+    position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%);
+    padding: 14px 32px; border: 2px solid var(--neon); color: var(--neon);
+    font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.2em;
+    box-shadow: 0 0 16px var(--neon), inset 0 0 16px rgba(0,255,208,0.2);
+    background: rgba(0,0,0,0.6); z-index: 10;
+    transition: all 0.2s ease;
+  }
+  .home-enter:hover, .home-enter:active { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+
+  /* ============================== APP SHELL ============================== */
+  .app { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
+  .topbar {
+    background: #000; border-bottom: 1px solid var(--neon-dim);
+    box-shadow: 0 0 12px rgba(0,255,208,0.2);
+    display: flex; align-items: center; flex-wrap: wrap;
+    padding: 6px 10px; gap: 6px;
+    transition: max-height 0.3s ease;
+    overflow: hidden; flex-shrink: 0;
+    font-size: 11px; font-family: 'Share Tech Mono', monospace;
+  }
+  .topbar-handle {
+    position: absolute; left: 0; right: 0; bottom: -6px; height: 6px;
+    cursor: ns-resize; z-index: 100;
+  }
+  .top-btn {
+    padding: 5px 10px; border: 1px solid var(--neon-dim); color: var(--neon);
+    background: #000; font-size: 10px; letter-spacing: 0.05em; font-family: 'Share Tech Mono', monospace;
+    transition: all 0.12s ease; white-space: nowrap;
+  }
+  .top-btn:hover, .top-btn:active { box-shadow: 0 0 8px var(--neon); border-color: var(--neon); }
+  .top-btn.active { background: var(--neon); color: #000; box-shadow: 0 0 10px var(--neon); }
+  .top-btn.danger { color: var(--accent); border-color: var(--accent); }
+  .top-btn.danger:hover, .top-btn.danger:active { box-shadow: 0 0 8px var(--accent); }
+  .top-group {
+    display: flex; align-items: center; gap: 4px;
+    padding: 0 6px; border-right: 1px dashed rgba(0,255,208,0.25);
+  }
+  .top-group:last-child { border-right: none; }
+  .vol-slider { width: 90px; }
+  .top-label { color: var(--neon-dim); font-size: 9px; letter-spacing: 0.1em; }
+
+  /* ============================== WORKSPACE ============================== */
+  .workspace { flex: 1; position: relative; overflow: hidden; }
+  .feature-bar {
+    background: #000; border-top: 1px solid var(--neon-dim);
+    display: flex; align-items: center; padding: 6px 10px; gap: 6px;
+    flex-wrap: wrap; flex-shrink: 0;
+  }
+  .feature-btn {
+    padding: 7px 14px; border: 1px solid var(--neon); color: var(--neon); background: #000;
+    font-size: 11px; letter-spacing: 0.06em;
+    transition: all 0.15s ease; font-family: 'Share Tech Mono', monospace;
+  }
+  .feature-btn:hover, .feature-btn:active { box-shadow: 0 0 12px var(--neon); }
+  .feature-btn.open { background: var(--neon); color: #000; box-shadow: 0 0 14px var(--neon); }
+  .feature-btn.special { color: var(--accent); border-color: var(--accent); font-weight: bold; }
+  .feature-btn.special.open { background: var(--accent); color: #000; box-shadow: 0 0 14px var(--accent); }
+
+  /* ============================== KEYBOARD ============================== */
+  .keyboard-wrap { background: #000; border-top: 1px solid var(--neon-dim); flex-shrink: 0; position: relative; }
+  .keyboard-control { display: flex; align-items: center; gap: 10px; padding: 5px 10px; border-bottom: 1px solid var(--neon-dim); }
+  .keyboard-control .size-slider { flex: 1; }
+  .keyboard {
+    position: relative; background: #000; overflow: hidden; transition: height 0.2s ease;
+    user-select: none; touch-action: none;
+  }
+  .keyboard-inner { position: absolute; top: 0; bottom: 0; }
+  .pkey {
+    position: absolute; top: 0; bottom: 0;
+    border: 1px solid var(--neon-dim);
+    cursor: pointer;
+    transition: background 0.05s ease;
+  }
+  .pkey.white { background: var(--white-key); }
+  .pkey.black { background: var(--black-key); z-index: 2; }
+  .pkey.held { background: var(--neon) !important; box-shadow: 0 0 18px var(--neon), inset 0 0 12px rgba(255,255,255,0.4); }
+  .pkey.lit { box-shadow: 0 0 14px var(--neon), inset 0 0 10px rgba(0,255,208,0.5); }
+  .pkey.lit.white { background: rgba(0,255,208,0.4) !important; }
+  .pkey.lit.black { background: rgba(0,255,208,0.7) !important; }
+  .pkey.build-on { background: var(--accent) !important; box-shadow: 0 0 14px var(--accent); }
+  .pkey-label { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #000; font-family: 'Share Tech Mono', monospace; pointer-events: none; opacity: 0.5; }
+
+  /* ============================== WINDOWS ============================== */
+  .window {
+    position: absolute;
+    background: rgba(0, 8, 6, 0.92);
+    border: 1px solid var(--neon);
+    box-shadow: 0 0 14px rgba(0,255,208,0.4), inset 0 0 12px rgba(0,255,208,0.08);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    min-width: 200px; min-height: 120px;
+    display: flex; flex-direction: column;
+    color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  }
+  .window-header {
+    background: #000; border-bottom: 1px solid var(--neon-dim);
+    padding: 6px 10px; display: flex; justify-content: space-between; align-items: center;
+    cursor: move; font-family: 'Press Start 2P', monospace; font-size: 9px; letter-spacing: 0.05em;
+    color: var(--neon); text-shadow: 0 0 6px var(--neon-dim);
+  }
+  .window-close {
+    color: var(--accent); padding: 0 4px; font-size: 14px;
+  }
+  .window-body { padding: 10px; overflow: auto; flex: 1; }
+  .window-resize {
+    position: absolute; right: 0; bottom: 0; width: 14px; height: 14px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, var(--neon) 50%, var(--neon) 60%, transparent 60%, transparent 70%, var(--neon) 70%, var(--neon) 80%, transparent 80%);
+  }
+
+  /* ============================== CONTROLS ============================== */
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .row label { font-size: 10px; color: var(--neon-dim); letter-spacing: 0.06em; min-width: 60px; }
+  .knob {
+    width: 50px; height: 50px; border: 1px solid var(--neon); border-radius: 50%;
+    position: relative; background: radial-gradient(circle, #001a16, #000);
+    box-shadow: 0 0 6px rgba(0,255,208,0.4);
+    cursor: ns-resize;
+  }
+  .knob-indicator {
+    position: absolute; top: 4px; left: 50%; width: 2px; height: 16px;
+    background: var(--neon); transform-origin: center 21px; transform: translateX(-50%);
+    box-shadow: 0 0 4px var(--neon);
+  }
+  .knob-label { font-size: 9px; color: var(--neon-dim); text-align: center; margin-top: 2px; letter-spacing: 0.05em; }
+  .knob-value { font-size: 9px; color: var(--neon); text-align: center; margin-top: 1px; }
+  .knob-wrap { display: flex; flex-direction: column; align-items: center; }
+  .grid-knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; }
+
+  .pill {
+    padding: 4px 10px; border: 1px solid var(--neon-dim); color: var(--neon); background: #000;
+    font-size: 10px; letter-spacing: 0.05em;
+  }
+  .pill.on { background: var(--neon); color: #000; }
+  .pill.accent { color: var(--accent); border-color: var(--accent); }
+  .pill.accent.on { background: var(--accent); color: #000; }
+
+  .patch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+  .patch-btn {
+    padding: 6px 8px; border: 1px solid var(--neon-dim); color: var(--text); background: #000;
+    font-size: 10px; text-align: left;
+  }
+  .patch-btn:hover, .patch-btn:active { box-shadow: 0 0 6px var(--neon); border-color: var(--neon); }
+  .patch-btn.active { background: var(--neon); color: #000; border-color: var(--neon); }
+  .bank-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+  .bank-tab { padding: 5px 8px; border: 1px solid var(--neon-dim); color: var(--neon); font-size: 9px; }
+  .bank-tab.active { background: var(--neon); color: #000; }
+
+  /* ============================== PAD SAMPLER ============================== */
+  .pads-grid { display: grid; gap: 8px; padding: 4px; }
+  .pad {
+    position: relative; aspect-ratio: 1 / 1; min-height: 60px;
+    border: 2px solid var(--neon-dim); color: var(--neon);
+    background: #050a09; font-size: 9px; padding: 3px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: all 0.08s ease; cursor: pointer;
+    text-align: center; word-break: break-word;
+  }
+  .pad.armed { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .pad.playing { background: rgba(0,255,208,0.6); color: #000; transform: translateZ(-6px) scale(0.95); box-shadow: 0 0 20px var(--neon), inset 0 0 14px var(--neon); }
+  .pad.cycle-current { border-color: var(--neon); box-shadow: 0 0 8px var(--neon); }
+  .pad.muted { opacity: 0.3; }
+  .pad-toggle { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border: 1px solid var(--neon-dim); background: #000; cursor: pointer; }
+  .pad-toggle.on { background: var(--neon); }
+  .pad-name { font-size: 8px; opacity: 0.8; }
+
+  /* ============================== CHORD BANK ============================== */
+  .chord-letter-tabs { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 8px; }
+  .chord-letter-tab { padding: 3px 7px; border: 1px solid var(--neon-dim); color: var(--neon); font-size: 10px; }
+  .chord-letter-tab.active { background: var(--neon); color: #000; }
+  .chord-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 4px; }
+  .chord-btn { padding: 4px; border: 1px solid var(--neon-dim); color: var(--text); font-size: 10px; background: #000; }
+  .chord-btn:hover, .chord-btn:active { background: var(--neon-dim); color: #000; }
+
+  /* ============================== 3D SOUND ============================== */
+  .threed-canvas-wrap { position: relative; width: 100%; aspect-ratio: 4/3; border: 1px solid var(--neon-dim); background: #000; overflow: hidden; }
+  .threed-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+  .threed-orb {
+    position: absolute; width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle, var(--neon), transparent);
+    box-shadow: 0 0 24px var(--neon), 0 0 48px var(--neon);
+    cursor: grab; transform: translate(-50%, -50%);
+    transition: box-shadow 0.15s;
+  }
+  .threed-orb.selected { box-shadow: 0 0 30px var(--accent), 0 0 60px var(--accent); }
+  .threed-orb.center { background: radial-gradient(circle, var(--accent), transparent); }
+  .threed-mode-row { display: flex; gap: 4px; margin-bottom: 8px; }
+
+  /* ============================== MOD WHEEL ============================== */
+  .modwheel-wrap { display: flex; gap: 20px; padding: 10px; }
+  .mod-slider {
+    width: 50px; height: 200px; background: #000; border: 1px solid var(--neon-dim); position: relative;
+    cursor: pointer;
+  }
+  .mod-slider-handle {
+    position: absolute; left: 0; right: 0; height: 14px; background: var(--neon);
+    box-shadow: 0 0 12px var(--neon); cursor: ns-resize;
+  }
+  .mod-slider-label { text-align: center; font-size: 10px; color: var(--neon-dim); margin-top: 4px; letter-spacing: 0.05em; }
+
+  /* ============================== COLOR PICKER ============================== */
+  .color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .color-row label { font-size: 10px; color: var(--neon-dim); min-width: 80px; letter-spacing: 0.04em; }
+  .color-row input[type="color"] { width: 40px; height: 30px; border: 1px solid var(--neon-dim); background: #000; cursor: pointer; }
+
+  /* ============================== SHORTCUTS ============================== */
+  .shortcut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; }
+  .shortcut-item { padding: 6px; border: 1px solid var(--neon-dim); display: flex; justify-content: space-between; font-size: 10px; }
+  .shortcut-key { color: var(--neon); font-weight: bold; padding: 1px 6px; background: rgba(0,255,208,0.1); border: 1px solid var(--neon-dim); }
+
+  /* helpers */
+  .scroll { overflow: auto; }
+  .scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scroll::-webkit-scrollbar-thumb { background: var(--neon-dim); }
+  .scroll::-webkit-scrollbar-track { background: #000; }
+  .hidden { display: none !important; }
+  .small { font-size: 9px; }
+  .title-sm { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--neon); margin-bottom: 6px; letter-spacing: 0.05em; }
+  .divider { height: 1px; background: var(--neon-dim); margin: 8px 0; opacity: 0.5; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/tone@15.0.4/build/Tone.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useCallback, useMemo, Fragment } = React;
+
+/* ============================================================
+   CONSTANTS & MUSIC THEORY
+   ============================================================ */
+const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const midiToName = (m) => `${NOTE_NAMES[((m%12)+12)%12]}${Math.floor(m/12)-1}`;
+const midiToFreq = (m) => 440 * Math.pow(2, (m - 69) / 12);
+
+const CHORD_FORMULAS = {
+  'maj':[0,4,7], 'min':[0,3,7], 'dim':[0,3,6], 'aug':[0,4,8],
+  'sus2':[0,2,7], 'sus4':[0,5,7], '6':[0,4,7,9], 'm6':[0,3,7,9],
+  '69':[0,4,7,9,14], 'maj7':[0,4,7,11], 'm7':[0,3,7,10], '7':[0,4,7,10],
+  'm7b5':[0,3,6,10], 'dim7':[0,3,6,9], '7b9':[0,4,7,10,13], '7#9':[0,4,7,10,15],
+  '7#11':[0,4,7,10,18], 'maj9':[0,4,7,11,14], 'm9':[0,3,7,10,14], '9':[0,4,7,10,14],
+  'maj11':[0,4,7,11,14,17], 'm11':[0,3,7,10,14,17], '11':[0,4,7,10,14,17],
+  'maj13':[0,4,7,11,14,21], 'm13':[0,3,7,10,14,21], '13':[0,4,7,10,14,21],
+  'add9':[0,4,7,14], 'm(add9)':[0,3,7,14],
+  'maj7#11':[0,4,7,11,18], 'maj7#5':[0,4,8,11], 'alt':[0,4,8,10,13,15],
+};
+
+const ROOT_NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const ROOT_TO_PC = Object.fromEntries(ROOT_NOTES.map((n,i)=>[n,i]));
+
+/* ============================================================
+   100 PATCH DEFINITIONS (5 banks × 20)
+   ============================================================ */
+const mk = (name, def) => ({ name, ...def });
+
+const BANK_EP = [
+  mk('Rhodes Mk1 Suitcase',  { kind:'fm', harm:1, modIdx:8,  modEnv:[0.005,0.9,0.0,0.4], amp:[0.005,1.2,0.25,1.4] }),
+  mk('Rhodes Mk2 Stage',     { kind:'fm', harm:2, modIdx:6,  modEnv:[0.005,0.7,0.0,0.3], amp:[0.005,1.0,0.30,1.2] }),
+  mk('Wurli 200A',           { kind:'fm', harm:14,modIdx:3,  modEnv:[0.004,0.4,0.05,0.3], amp:[0.004,0.6,0.35,0.9] }),
+  mk('Tine Bell EP',         { kind:'fm', harm:7, modIdx:5,  modEnv:[0.003,0.8,0.0,0.4], amp:[0.003,1.4,0.20,1.6] }),
+  mk('Dyno My Rhodes',       { kind:'fm', harm:1, modIdx:12, modEnv:[0.003,1.0,0.05,0.5], amp:[0.003,1.5,0.35,1.5] }),
+  mk('CP70 Electric Grand',  { kind:'fm', harm:1, modIdx:4,  modEnv:[0.003,0.9,0.0,0.5], amp:[0.003,1.6,0.25,1.8] }),
+  mk('FM EP Classic',        { kind:'fm', harm:3, modIdx:5,  modEnv:[0.004,0.6,0.05,0.4], amp:[0.004,1.1,0.30,1.2] }),
+  mk('Lounge EP',            { kind:'fm', harm:1, modIdx:3,  modEnv:[0.008,1.2,0.10,0.6], amp:[0.008,1.4,0.40,1.6] }),
+  mk('Suitcase Tremolo',     { kind:'fm', harm:1, modIdx:7,  modEnv:[0.005,0.9,0.0,0.4], amp:[0.005,1.3,0.30,1.4], tremolo:true }),
+  mk('Stage Dark',           { kind:'fm', harm:1, modIdx:9,  modEnv:[0.005,1.0,0.0,0.4], amp:[0.005,1.5,0.25,1.7] }),
+  mk('Mk5 Bright',           { kind:'fm', harm:4, modIdx:7,  modEnv:[0.003,0.5,0.0,0.3], amp:[0.003,0.9,0.30,1.1] }),
+  mk('Wurli Vintage',        { kind:'fm', harm:10,modIdx:4,  modEnv:[0.004,0.4,0.05,0.3], amp:[0.004,0.7,0.30,0.8] }),
+  mk('Roads Pro',            { kind:'fm', harm:2, modIdx:8,  modEnv:[0.004,0.8,0.0,0.4], amp:[0.004,1.3,0.30,1.4] }),
+  mk('Lonely Tine',          { kind:'fm', harm:6, modIdx:6,  modEnv:[0.004,1.1,0.0,0.5], amp:[0.004,1.6,0.20,1.8] }),
+  mk('Whirly Funk',          { kind:'fm', harm:12,modIdx:5,  modEnv:[0.003,0.3,0.05,0.2], amp:[0.003,0.5,0.25,0.6] }),
+  mk('Smooth Operator',      { kind:'fm', harm:3, modIdx:4,  modEnv:[0.010,1.0,0.10,0.6], amp:[0.010,1.5,0.40,1.6] }),
+  mk('Velvet EP',            { kind:'fm', harm:1, modIdx:5,  modEnv:[0.012,1.2,0.05,0.7], amp:[0.012,1.7,0.35,1.8] }),
+  mk('Tine Glass',           { kind:'fm', harm:8, modIdx:8,  modEnv:[0.003,1.3,0.0,0.6], amp:[0.003,1.8,0.15,2.0] }),
+  mk('Glow Keys',            { kind:'fm', harm:5, modIdx:6,  modEnv:[0.005,0.9,0.05,0.5], amp:[0.005,1.4,0.30,1.5] }),
+  mk('Aurora Tines',         { kind:'fm', harm:7, modIdx:7,  modEnv:[0.006,1.1,0.0,0.6], amp:[0.006,1.6,0.25,1.7] }),
+];
+
+const BANK_LEADS = [
+  mk('Mini Lead',         { kind:'mono', osc:'sawtooth', filt:1800, q:6,  amp:[0.005,0.2,0.7,0.3], fenv:2000 }),
+  mk('OB Lead',           { kind:'mono', osc:'sawtooth', filt:2200, q:4,  amp:[0.005,0.3,0.8,0.4], fenv:1800 }),
+  mk('303 Acid',          { kind:'mono', osc:'sawtooth', filt:800,  q:14, amp:[0.001,0.15,0.0,0.1], fenv:3200 }),
+  mk('Prophet Lead',      { kind:'mono', osc:'sawtooth', filt:2400, q:3,  amp:[0.008,0.4,0.7,0.5], fenv:2200 }),
+  mk('Square Pulse',      { kind:'mono', osc:'square',   filt:2600, q:2,  amp:[0.005,0.3,0.75,0.4], fenv:2000 }),
+  mk('Jupiter Lead',      { kind:'mono', osc:'sawtooth', filt:2800, q:3,  amp:[0.005,0.3,0.8,0.4], fenv:2400 }),
+  mk('Hoover Stab',       { kind:'mono', osc:'sawtooth', filt:1600, q:5,  amp:[0.005,0.5,0.6,0.4], fenv:1800, detune:18 }),
+  mk('Reso Wah',          { kind:'mono', osc:'sawtooth', filt:900,  q:18, amp:[0.005,0.3,0.7,0.4], fenv:2500 }),
+  mk('Chip Lead 8-bit',   { kind:'mono', osc:'square',   filt:5000, q:1,  amp:[0.001,0.1,0.9,0.1], fenv:0 }),
+  mk('Ghost Saw',         { kind:'mono', osc:'sawtooth', filt:1400, q:8,  amp:[0.02,0.5,0.6,0.6], fenv:1600 }),
+  mk('FM Whistle',        { kind:'fm', harm:3, modIdx:2, modEnv:[0.005,0.15,0.4,0.2], amp:[0.005,0.2,0.8,0.3] }),
+  mk('Detuned Stack',     { kind:'mono', osc:'sawtooth', filt:2400, q:3,  amp:[0.005,0.3,0.8,0.4], fenv:2000, detune:25 }),
+  mk('Bright Saw',        { kind:'mono', osc:'sawtooth', filt:3200, q:2,  amp:[0.003,0.2,0.85,0.3], fenv:2400 }),
+  mk('Pulse Width Lead',  { kind:'mono', osc:'square',   filt:2400, q:3,  amp:[0.005,0.3,0.8,0.4], fenv:2000, detune:8 }),
+  mk('Buzz Lead',         { kind:'mono', osc:'sawtooth', filt:3600, q:6,  amp:[0.003,0.25,0.8,0.3], fenv:2600 }),
+  mk('Theremin Sine',     { kind:'mono', osc:'sine',     filt:4000, q:1,  amp:[0.03,0.4,0.85,0.5], fenv:1000 }),
+  mk('Synth Brass Lead',  { kind:'mono', osc:'sawtooth', filt:2000, q:4,  amp:[0.015,0.4,0.75,0.5], fenv:1800 }),
+  mk('Talk Box Lead',     { kind:'mono', osc:'sawtooth', filt:1600, q:10, amp:[0.005,0.3,0.7,0.4], fenv:2200 }),
+  mk('Lazer Beam',        { kind:'mono', osc:'sawtooth', filt:4000, q:8,  amp:[0.001,0.15,0.7,0.2], fenv:3000 }),
+  mk('Sub Octave Lead',   { kind:'mono', osc:'sawtooth', filt:2200, q:4,  amp:[0.005,0.3,0.8,0.4], fenv:2000, subOct:true }),
+];
+
+const BANK_PADS = [
+  mk('Glass Pad',         { kind:'pad', osc:'sawtooth', filt:1200, q:2, amp:[1.2,1.0,0.85,2.0], fenv:1000, detune:8 }),
+  mk('Warm Strings Pad',  { kind:'pad', osc:'sawtooth', filt:900,  q:1, amp:[1.5,1.0,0.85,2.5], fenv:800, detune:6 }),
+  mk('Dream Pad',         { kind:'pad', osc:'sawtooth', filt:1100, q:3, amp:[2.0,1.5,0.9,3.0], fenv:1200, detune:10 }),
+  mk('Halo Pad',          { kind:'pad', osc:'sine',     filt:2000, q:1, amp:[1.8,1.0,0.9,2.5], fenv:600 }),
+  mk('JX Pad',            { kind:'pad', osc:'sawtooth', filt:1400, q:2, amp:[1.0,1.0,0.85,2.0], fenv:1000, detune:7 }),
+  mk('Vox Pad',           { kind:'pad', osc:'sawtooth', filt:1000, q:5, amp:[1.4,1.0,0.85,2.2], fenv:900, detune:9 }),
+  mk('Cosmic Pad',        { kind:'pad', osc:'sawtooth', filt:1300, q:3, amp:[2.5,1.5,0.9,3.5], fenv:1300, detune:12 }),
+  mk('Soft Sine Pad',     { kind:'pad', osc:'sine',     filt:3000, q:1, amp:[1.5,1.0,0.9,2.0], fenv:400 }),
+  mk('Analog Brass Pad',  { kind:'pad', osc:'sawtooth', filt:1800, q:2, amp:[0.8,1.0,0.8,1.5], fenv:1500, detune:5 }),
+  mk('Choir Pad',         { kind:'pad', osc:'sawtooth', filt:1200, q:4, amp:[1.6,1.0,0.9,2.5], fenv:1000, detune:11 }),
+  mk('Sparkle Pad',       { kind:'pad', osc:'triangle', filt:3200, q:2, amp:[1.0,1.0,0.85,2.0], fenv:1500, detune:8 }),
+  mk('Square Pad',        { kind:'pad', osc:'square',   filt:1500, q:2, amp:[1.2,1.0,0.85,2.0], fenv:1000, detune:6 }),
+  mk('Air Pad',           { kind:'pad', osc:'sine',     filt:4000, q:1, amp:[2.5,1.5,0.9,3.0], fenv:300 }),
+  mk('Resonant Pad',      { kind:'pad', osc:'sawtooth', filt:1000, q:8, amp:[1.5,1.0,0.85,2.2], fenv:1500, detune:9 }),
+  mk('Ethereal Wash',     { kind:'pad', osc:'sine',     filt:2500, q:2, amp:[3.0,2.0,0.9,4.0], fenv:800, detune:14 }),
+  mk('Drift Pad',         { kind:'pad', osc:'sawtooth', filt:1400, q:3, amp:[2.0,1.5,0.85,2.8], fenv:1100, detune:10 }),
+  mk('Vintage VCO Pad',   { kind:'pad', osc:'sawtooth', filt:1600, q:2, amp:[1.0,1.0,0.85,2.0], fenv:1200, detune:5 }),
+  mk('Velvet Pad',        { kind:'pad', osc:'triangle', filt:1800, q:2, amp:[1.5,1.0,0.9,2.4], fenv:900, detune:7 }),
+  mk('Slow Attack Pad',   { kind:'pad', osc:'sawtooth', filt:1500, q:2, amp:[3.5,1.5,0.9,3.0], fenv:1300, detune:9 }),
+  mk('Liquid Pad',        { kind:'pad', osc:'sawtooth', filt:1200, q:5, amp:[2.2,1.5,0.85,2.8], fenv:1400, detune:11 }),
+];
+
+const BANK_BASS = [
+  mk('Moog Bass',         { kind:'mono', osc:'sawtooth', filt:600,  q:6,  amp:[0.003,0.3,0.6,0.2], fenv:1400 }),
+  mk('Sub Bass',          { kind:'mono', osc:'sine',     filt:300,  q:1,  amp:[0.005,0.4,0.85,0.3], fenv:200 }),
+  mk('Reese Bass',        { kind:'mono', osc:'sawtooth', filt:500,  q:4,  amp:[0.005,0.4,0.8,0.3], fenv:1000, detune:20 }),
+  mk('Acid Bass',         { kind:'mono', osc:'sawtooth', filt:450,  q:14, amp:[0.001,0.2,0.0,0.1], fenv:3200 }),
+  mk('Bass Station',      { kind:'mono', osc:'sawtooth', filt:700,  q:5,  amp:[0.003,0.3,0.7,0.3], fenv:1500 }),
+  mk('FM Bass',           { kind:'fm', harm:2, modIdx:5, modEnv:[0.003,0.2,0.3,0.2], amp:[0.003,0.3,0.7,0.2] }),
+  mk('Square Bass',       { kind:'mono', osc:'square',   filt:800,  q:3,  amp:[0.003,0.3,0.7,0.2], fenv:1200 }),
+  mk('808 Sub',           { kind:'mono', osc:'sine',     filt:200,  q:1,  amp:[0.003,0.8,0.7,1.0], fenv:300, subOct:true }),
+  mk('Jupiter Bass',      { kind:'mono', osc:'sawtooth', filt:900,  q:3,  amp:[0.005,0.3,0.75,0.3], fenv:1600 }),
+  mk('Pluck Bass',        { kind:'mono', osc:'sawtooth', filt:1200, q:6,  amp:[0.001,0.2,0.0,0.15], fenv:1800 }),
+  mk('Bumpy Bass',        { kind:'mono', osc:'sawtooth', filt:550,  q:8,  amp:[0.003,0.3,0.6,0.25], fenv:1400 }),
+  mk('Dirty Reese',       { kind:'mono', osc:'sawtooth', filt:600,  q:6,  amp:[0.005,0.4,0.8,0.3], fenv:1100, detune:30 }),
+  mk('Talking Bass',      { kind:'mono', osc:'sawtooth', filt:800,  q:10, amp:[0.005,0.3,0.7,0.3], fenv:1800 }),
+  mk('Wobble Bass',       { kind:'mono', osc:'sawtooth', filt:700,  q:8,  amp:[0.005,0.3,0.8,0.3], fenv:1600 }),
+  mk('Synthwave Bass',    { kind:'mono', osc:'sawtooth', filt:1000, q:4,  amp:[0.003,0.3,0.75,0.3], fenv:1500 }),
+  mk('Funk Bass',         { kind:'mono', osc:'square',   filt:1100, q:5,  amp:[0.003,0.2,0.5,0.2], fenv:1800 }),
+  mk('Pulse Bass',        { kind:'mono', osc:'square',   filt:700,  q:4,  amp:[0.003,0.3,0.7,0.25], fenv:1400, detune:8 }),
+  mk('Thick Saw Bass',    { kind:'mono', osc:'sawtooth', filt:650,  q:4,  amp:[0.003,0.3,0.75,0.3], fenv:1300, detune:15 }),
+  mk('Subby Bass',        { kind:'mono', osc:'sine',     filt:250,  q:1,  amp:[0.005,0.4,0.85,0.4], fenv:150 }),
+  mk('Growl Bass',        { kind:'mono', osc:'sawtooth', filt:500,  q:10, amp:[0.003,0.3,0.7,0.3], fenv:1600 }),
+];
+
+const BANK_STRINGS = [
+  mk('Solina',            { kind:'pad', osc:'sawtooth', filt:2000, q:1, amp:[0.5,0.8,0.85,1.6], fenv:600,  detune:8 }),
+  mk('Cinematic Strings', { kind:'pad', osc:'sawtooth', filt:1800, q:2, amp:[1.0,1.0,0.9,2.2], fenv:800,  detune:10 }),
+  mk('Lush Strings',      { kind:'pad', osc:'sawtooth', filt:1600, q:2, amp:[1.2,1.0,0.9,2.4], fenv:900,  detune:12 }),
+  mk('Synth Strings 1',   { kind:'pad', osc:'sawtooth', filt:2200, q:2, amp:[0.6,0.8,0.85,1.4], fenv:700,  detune:9 }),
+  mk('Synth Strings 2',   { kind:'pad', osc:'sawtooth', filt:1900, q:3, amp:[0.8,0.8,0.85,1.6], fenv:800,  detune:11 }),
+  mk('Mellotron Strings', { kind:'pad', osc:'triangle', filt:1500, q:2, amp:[0.3,0.6,0.8,1.0], fenv:600,  detune:6 }),
+  mk('Wide Strings',      { kind:'pad', osc:'sawtooth', filt:2100, q:2, amp:[0.9,1.0,0.9,2.0], fenv:900,  detune:14 }),
+  mk('Octave Strings',    { kind:'pad', osc:'sawtooth', filt:2000, q:2, amp:[0.7,1.0,0.85,1.8], fenv:800,  detune:10 }),
+  mk('Velvet Strings',    { kind:'pad', osc:'sawtooth', filt:1700, q:3, amp:[1.4,1.0,0.9,2.6], fenv:1000, detune:13 }),
+  mk('Tape Strings',      { kind:'pad', osc:'sawtooth', filt:1400, q:2, amp:[0.5,0.8,0.8,1.4], fenv:600,  detune:7 }),
+  mk('Bowed Pad',         { kind:'pad', osc:'sawtooth', filt:1800, q:4, amp:[1.5,1.0,0.9,2.4], fenv:1100, detune:10 }),
+  mk('Romantic Strings',  { kind:'pad', osc:'sawtooth', filt:1700, q:3, amp:[1.6,1.0,0.9,2.8], fenv:1000, detune:13 }),
+  mk('Hi Strings',        { kind:'pad', osc:'sawtooth', filt:2400, q:2, amp:[0.7,0.8,0.85,1.6], fenv:700,  detune:10 }),
+  mk('Lo Strings',        { kind:'pad', osc:'sawtooth', filt:1300, q:2, amp:[1.0,1.0,0.85,2.0], fenv:800,  detune:8 }),
+  mk('Glass Strings',     { kind:'pad', osc:'triangle', filt:2500, q:2, amp:[1.0,1.0,0.85,2.0], fenv:900,  detune:9 }),
+  mk('Pizzicato Strings', { kind:'pad', osc:'sawtooth', filt:2000, q:4, amp:[0.005,0.3,0.0,0.2], fenv:1800 }),
+  mk('Ensemble Wide',     { kind:'pad', osc:'sawtooth', filt:1900, q:2, amp:[1.2,1.0,0.9,2.4], fenv:900,  detune:15 }),
+  mk('Vintage VHS Strings',{kind:'pad', osc:'sawtooth', filt:1500, q:3, amp:[1.0,1.0,0.85,2.0], fenv:800,  detune:11 }),
+  mk('Dreamy Strings',    { kind:'pad', osc:'sawtooth', filt:1600, q:2, amp:[2.0,1.5,0.9,3.0], fenv:1100, detune:13 }),
+  mk('Movie Strings',     { kind:'pad', osc:'sawtooth', filt:1800, q:2, amp:[1.3,1.0,0.9,2.4], fenv:900,  detune:12 }),
+];
+
+const BANKS = {
+  ep:      { label:'Electric Piano', patches: BANK_EP },
+  leads:   { label:'Synth Leads',    patches: BANK_LEADS },
+  pads:    { label:'Synth Pads',     patches: BANK_PADS },
+  bass:    { label:'Synth Bass',     patches: BANK_BASS },
+  strings: { label:'Strings',        patches: BANK_STRINGS },
+};
+const BANK_ORDER = ['ep','leads','pads','bass','strings'];
+
+/* ============================================================
+   KEYBOARD SHORTCUTS (Mac)
+   ============================================================ */
+const KEY_MAP_NOTES = {
+  'a':60,'w':61,'s':62,'e':63,'d':64,'f':65,'t':66,'g':67,'y':68,'h':69,'u':70,'j':71,
+  'k':72,'o':73,'l':74,'p':75,';':76,
+};
+const SHORTCUTS = {
+  '⇧A …⇧;': 'White / black piano keys',
+  'Z / X':  'Octave − / +',
+  ', / .':  'Transpose − / +',
+  '↑ / ↓':  'Pitch bend up / down',
+  '← / →':  'Cycle pads left / right',
+  'Space':  'Play / Stop',
+  'B':      'Build mode toggle',
+  'C':      'Clear shape',
+  'M':      'Mod wheel +',
+  'N':      'Mod wheel −',
+  'Shift':  'Sustain (hold)',
+  '⌘ S':    'Save project',
+  '⌘ O':    'Open project',
+  '⌘ K':    'Kill all sound',
+  'H':      'Hide keys',
+  '1‒5':    'Sample pad triggers (row 1)',
+  'Q‒T':    'Sample pad triggers (row 2)',
+};
+
+/* ============================================================
+   AUDIO ENGINE
+   ============================================================ */
+const AE = {
+  ready: false,
+  // master & FX
+  master: null,
+  eqLow: null, eqMid: null, eqHi: null,
+  filter: null, drive: null,
+  chorus: null, phaser: null, tremolo: null, delay: null, reverb: null,
+  threeReverb: null, threeShimmer: null, threeDelay: null, threeGain: null,
+  // synth
+  voices: {}, // midi -> {node, env, ...} for poly
+  currentPatch: null,
+  voiceCount: 0,
+  // per-pad players
+  padPlayers: {},
+  init() {
+    if (this.ready) return;
+    Tone.start();
+    this.master = new Tone.Gain(0.7).toDestination();
+    this.reverb = new Tone.Reverb({ decay: 3, wet: 0.25 }).connect(this.master);
+    this.delay = new Tone.FeedbackDelay({ delayTime: 0.3, feedback: 0.25, wet: 0.2 }).connect(this.reverb);
+    this.tremolo = new Tone.Tremolo({ frequency: 4, depth: 0 }).start().connect(this.delay);
+    this.phaser = new Tone.Phaser({ frequency: 0.5, octaves: 0, baseFrequency: 600 }).connect(this.tremolo);
+    this.chorus = new Tone.Chorus({ frequency: 1.5, delayTime: 3.5, depth: 0, wet: 0 }).start().connect(this.phaser);
+    this.drive = new Tone.Distortion({ distortion: 0, wet: 0 }).connect(this.chorus);
+    this.filter = new Tone.Filter({ frequency: 12000, type: 'lowpass', Q: 0 }).connect(this.drive);
+    this.eqHi = new Tone.Filter({ frequency: 5000, type: 'highshelf', gain: 0 }).connect(this.filter);
+    this.eqMid = new Tone.Filter({ frequency: 1000, type: 'peaking', Q: 1, gain: 0 }).connect(this.eqHi);
+    this.eqLow = new Tone.Filter({ frequency: 200, type: 'lowshelf', gain: 0 }).connect(this.eqMid);
+
+    // 3D sound chain (parallel layer)
+    this.threeGain = new Tone.Gain(0).connect(this.master);
+    this.threeReverb = new Tone.Reverb({ decay: 8, wet: 0.9 }).connect(this.threeGain);
+    this.threeShimmer = new Tone.PitchShift({ pitch: 12, wet: 0.5 }).connect(this.threeReverb);
+    this.threeDelay = new Tone.PingPongDelay({ delayTime: '8n.', feedback: 0.55, wet: 0.6 }).connect(this.threeShimmer);
+
+    // analyser for visualizer
+    this.analyser = new Tone.Analyser('waveform', 512);
+    this.master.connect(this.analyser);
+
+    this.ready = true;
+  },
+  voicesInput() { return this.eqLow; },
+  // build a fresh voice given patch + midi
+  buildVoice(patch, midi) {
+    const freq = midiToFreq(midi);
+    const env = new Tone.AmplitudeEnvelope({
+      attack:patch.amp[0], decay:patch.amp[1], sustain:patch.amp[2], release:patch.amp[3]
+    });
+    env.connect(this.voicesInput());
+
+    if (patch.kind === 'fm') {
+      const carrier = new Tone.Oscillator(freq, 'sine').start();
+      const mod = new Tone.Oscillator(freq * (patch.harm||1), 'sine').start();
+      const modGain = new Tone.Gain(0);
+      const modEnv = new Tone.AmplitudeEnvelope({
+        attack:patch.modEnv[0], decay:patch.modEnv[1], sustain:patch.modEnv[2], release:patch.modEnv[3]
+      });
+      mod.connect(modGain);
+      modGain.connect(modEnv);
+      // modulation depth proportional to freq for FM-style results
+      const depth = freq * (patch.modIdx || 1);
+      modEnv.connect(carrier.frequency);
+      modGain.gain.value = depth;
+      carrier.connect(env);
+      modEnv.triggerAttack();
+      env.triggerAttack();
+      return { kind:'fm', env, modEnv, nodes:[carrier, mod, modGain] };
+    }
+    // mono/pad sub-style
+    const o1 = new Tone.Oscillator(freq, patch.osc).start();
+    let o2 = null;
+    if (patch.detune) {
+      o2 = new Tone.Oscillator(freq, patch.osc).start();
+      o2.detune.value = patch.detune;
+    }
+    let sub = null;
+    if (patch.subOct) {
+      sub = new Tone.Oscillator(freq/2, 'sine').start();
+    }
+    const oscGain = new Tone.Gain(0.6);
+    o1.connect(oscGain);
+    if (o2) o2.connect(oscGain);
+    if (sub) sub.connect(oscGain);
+
+    const filt = new Tone.Filter({ frequency: patch.filt, Q: patch.q, type:'lowpass' });
+    const fenvAmt = patch.fenv || 0;
+    const filtMod = new Tone.Gain(fenvAmt);
+    const filtEnv = new Tone.AmplitudeEnvelope({ attack:0.005, decay:0.3, sustain:0.4, release:0.4 });
+    filtEnv.connect(filtMod);
+    filtMod.connect(filt.frequency);
+    oscGain.connect(filt);
+    filt.connect(env);
+    filtEnv.triggerAttack();
+    env.triggerAttack();
+    return { kind:'sub', env, filtEnv, nodes:[o1, o2, sub, oscGain, filt, filtMod].filter(Boolean) };
+  },
+  noteOn(midi, patch) {
+    if (!this.ready) return;
+    if (this.voices[midi]) this.noteOff(midi, true);
+    const voice = this.buildVoice(patch, midi);
+    this.voices[midi] = voice;
+    this.voiceCount++;
+  },
+  noteOff(midi, immediate=false) {
+    const v = this.voices[midi];
+    if (!v) return;
+    v.env.triggerRelease();
+    if (v.modEnv) v.modEnv.triggerRelease();
+    if (v.filtEnv) v.filtEnv.triggerRelease();
+    const release = (v.env.release || 0.5) * 1000 + 100;
+    setTimeout(()=> {
+      try { v.nodes.forEach(n => n && n.dispose && n.dispose()); v.env.dispose(); v.modEnv && v.modEnv.dispose(); v.filtEnv && v.filtEnv.dispose(); } catch(e){}
+      if (this.voices[midi] === v) { delete this.voices[midi]; this.voiceCount--; }
+    }, release);
+  },
+  allNotesOff() {
+    Object.keys(this.voices).forEach(k => this.noteOff(+k));
+  },
+  killAll() {
+    Object.values(this.voices).forEach(v => {
+      try { v.nodes.forEach(n => n && n.dispose && n.dispose()); v.env.dispose(); v.modEnv && v.modEnv.dispose(); v.filtEnv && v.filtEnv.dispose(); } catch(e){}
+    });
+    this.voices = {}; this.voiceCount = 0;
+  },
+  setMaster(v) { if (this.ready) this.master.gain.value = v; },
+  applyDetune(cents) {
+    Object.values(this.voices).forEach(v => {
+      v.nodes.forEach(n => { if (n && n.detune && typeof n.detune.value === 'number') n.detune.value = cents; });
+    });
+  },
+  setFX({ eqLow, eqMid, eqHi, drive, chorus, phaser, tremolo, delayTime, delayFb, delayWet, reverb, reverbWet, filterCut, filterRes }) {
+    if (!this.ready) return;
+    this.eqLow.gain.value = eqLow;
+    this.eqMid.gain.value = eqMid;
+    this.eqHi.gain.value = eqHi;
+    this.drive.distortion = drive;
+    this.drive.wet.value = drive > 0 ? Math.min(1, drive * 1.5) : 0;
+    this.chorus.depth = chorus;
+    this.chorus.wet.value = chorus > 0 ? Math.min(1, chorus) : 0;
+    this.phaser.octaves = phaser * 3;
+    this.tremolo.depth.value = tremolo;
+    this.delay.delayTime.value = delayTime;
+    this.delay.feedback.value = delayFb;
+    this.delay.wet.value = delayWet;
+    this.reverb.wet.value = reverbWet;
+    this.filter.frequency.value = filterCut;
+    this.filter.Q.value = filterRes;
+  },
+  set3D(on, x, y, z, mix, shimmer) {
+    if (!this.ready) return;
+    this.threeGain.gain.rampTo(on ? mix : 0, 0.3);
+    this.threeShimmer.wet.value = shimmer;
+    // simulate pan via stereo pan node on threeGain? threeGain is mono Gain; use Panner on master path instead.
+    // For simplicity rotate delay times by xy
+    this.threeDelay.feedback.value = 0.4 + Math.abs(y) * 0.4;
+  },
+};
+
+/* ============================================================
+   HOMEPAGE
+   ============================================================ */
+const Homepage = ({ onEnter }) => {
+  const vizRef = useRef(null);
+  const [litPads, setLitPads] = useState([false,false,false,false]);
+
+  // Animated pads
+  useEffect(() => {
+    const t = setInterval(() => {
+      setLitPads(p => p.map(() => Math.random() > 0.5));
+    }, 400);
+    return () => clearInterval(t);
+  }, []);
+
+  // Demo visualizer canvas (procedural audio waveform)
+  useEffect(() => {
+    const canvas = vizRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width = canvas.clientWidth * 2;
+    const h = canvas.height = canvas.clientHeight * 2;
+    let raf = 0, t = 0;
+    const draw = () => {
+      t += 0.05;
+      ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle = '#00ffd0'; ctx.lineWidth = 3; ctx.shadowColor = '#00ffd0'; ctx.shadowBlur = 16;
+      ctx.beginPath();
+      for (let i = 0; i < w; i += 4) {
+        const y = h/2 + Math.sin(i*0.02 + t)*30 + Math.sin(i*0.05 + t*1.3)*15 + Math.sin(i*0.11 + t*0.6)*10;
+        if (i === 0) ctx.moveTo(i, y); else ctx.lineTo(i, y);
+      }
+      ctx.stroke();
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // 16-bit piano keys
+  const whiteKeys = Array.from({length:15});
+  const blackKeys = [0,1,3,4,5,7,8,10,11,12]; // positions in 15-white range
+
+  // Floating symbols
+  const symbols = useMemo(() => {
+    const list = ['∫','∑','π','√','♪','♫','𝄞','♭','♯','f(x)','Δ','Ω','λ','∞','y=mx+b','e^iπ','dB','Hz','BPM','f'];
+    return Array.from({length:18}).map((_,i) => ({
+      sym: list[i % list.length],
+      left: Math.random()*100,
+      top: 20 + Math.random()*60,
+      dx: (Math.random()-0.5)*200 + 'px',
+      dy: -(50 + Math.random()*120) + 'px',
+      delay: Math.random()*8 + 's',
+      size: 14 + Math.random()*16 + 'px',
+    }));
+  }, []);
+
+  return (
+    <div className="home">
+      <div className="home-grid"></div>
+      {symbols.map((s,i) => (
+        <span key={i} className="home-symbol"
+          style={{left:s.left+'%', top:s.top+'%', fontSize:s.size, animationDelay:s.delay, '--dx':s.dx, '--dy':s.dy}}>
+          {s.sym}
+        </span>
+      ))}
+
+      <h1 className="home-title">HOLD IT DOWN</h1>
+      <div className="home-subtitle">— NEON SYNTH WORKSTATION —</div>
+
+      <div className="home-piano">
+        {whiteKeys.map((_,i) => (
+          <div key={'w'+i} className="key white" style={{left: (i/15*100)+'%'}}>
+            <div className="key-glow" style={{opacity: 0.3 + Math.sin(i*0.5)*0.2}}></div>
+          </div>
+        ))}
+        {blackKeys.map((p,i) => (
+          <div key={'b'+i} className="key black" style={{left: ((p+0.7)/15*100)+'%'}}></div>
+        ))}
+      </div>
+
+      <div className="home-pads">
+        {litPads.map((on,i) => (
+          <div key={i} className={'home-pad' + (on?' lit':'')}></div>
+        ))}
+      </div>
+
+      <div className="home-knobs">
+        <div className="home-knob" style={{animation:'spin 4s linear infinite', '--spin':'0deg'}}>
+          <style>{`@keyframes spin { from { transform: rotate(-130deg); } to { transform: rotate(130deg); } }`}</style>
+        </div>
+        <div className="home-knob" style={{transform:'rotate(45deg)'}}></div>
+        <div className="home-knob" style={{transform:'rotate(-30deg)'}}></div>
+        <div className="home-knob" style={{transform:'rotate(70deg)'}}></div>
+        <div className="home-slider" style={{transform:'translateY(10px)'}}></div>
+        <div className="home-slider" style={{transform:'translateY(20px)'}}></div>
+        <div className="home-slider" style={{transform:'translateY(-5px)'}}></div>
+        <div className="home-slider" style={{transform:'translateY(15px)'}}></div>
+      </div>
+
+      <div className="home-viz"><canvas ref={vizRef}></canvas></div>
+
+      <button className="home-enter" onClick={onEnter}>▶ ENTER</button>
+      <div className="home-credit">DESIGNED BY MARIO GARCIA</div>
+    </div>
+  );
+};
+
+/* ============================================================
+   DRAGGABLE / RESIZABLE WINDOW
+   ============================================================ */
+const DraggableWindow = ({ title, children, onClose, x, y, w, h, onMove, onResize, z, onFocus }) => {
+  const dragRef = useRef(null);
+  const startDrag = (e) => {
+    e.preventDefault(); onFocus();
+    const t = e.touches ? e.touches[0] : e;
+    const startX = t.clientX, startY = t.clientY, ox = x, oy = y;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      onMove(ox + (m.clientX - startX), oy + (m.clientY - startY));
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+  const startResize = (e) => {
+    e.preventDefault(); e.stopPropagation(); onFocus();
+    const t = e.touches ? e.touches[0] : e;
+    const startX = t.clientX, startY = t.clientY, ow = w, oh = h;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      onResize(Math.max(200, ow + (m.clientX - startX)), Math.max(120, oh + (m.clientY - startY)));
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+
+  return (
+    <div className="window" style={{left:x, top:y, width:w, height:h, zIndex:z}} onMouseDown={onFocus} onTouchStart={onFocus}>
+      <div className="window-header" onMouseDown={startDrag} onTouchStart={startDrag} ref={dragRef}>
+        <span>{title}</span>
+        <button className="window-close" onClick={onClose}>✕</button>
+      </div>
+      <div className="window-body scroll">{children}</div>
+      <div className="window-resize" onMouseDown={startResize} onTouchStart={startResize}></div>
+    </div>
+  );
+};
+
+/* ============================================================
+   KNOB COMPONENT
+   ============================================================ */
+const Knob = ({ label, value, min=0, max=1, step=0.01, onChange, format }) => {
+  const ref = useRef(null);
+  const start = (e) => {
+    e.preventDefault();
+    const t = e.touches ? e.touches[0] : e;
+    const startY = t.clientY, ov = value;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      const dy = startY - m.clientY;
+      const range = max - min;
+      let nv = ov + (dy / 100) * range;
+      nv = Math.max(min, Math.min(max, Math.round(nv / step) * step));
+      onChange(nv);
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+  const norm = (value - min) / (max - min);
+  const deg = -130 + norm * 260;
+  return (
+    <div className="knob-wrap">
+      <div className="knob" ref={ref} onMouseDown={start} onTouchStart={start}>
+        <div className="knob-indicator" style={{transform:`translateX(-50%) rotate(${deg}deg)`}}></div>
+      </div>
+      <div className="knob-label">{label}</div>
+      <div className="knob-value">{format ? format(value) : value.toFixed(2)}</div>
+    </div>
+  );
+};
+
+/* ============================================================
+   PIANO KEYS COMPONENT
+   ============================================================ */
+const PianoKeys = ({ height, startMidi, numKeys, activeMidis, litMidis, buildLitMidis, chromatic, onNoteOn, onNoteOff, scrollEnabled, onScroll }) => {
+  const wrapRef = useRef(null);
+  const [keyW, setKeyW] = useState(40);
+
+  useEffect(() => {
+    const update = () => {
+      if (!wrapRef.current) return;
+      // count white keys in range
+      let wc = 0;
+      for (let m = startMidi; m < startMidi + numKeys; m++) if (![1,3,6,8,10].includes(((m%12)+12)%12)) wc++;
+      setKeyW(wrapRef.current.clientWidth / wc);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [numKeys, startMidi]);
+
+  // Build key layout
+  const keys = [];
+  let xWhite = 0;
+  for (let m = startMidi; m < startMidi + numKeys; m++) {
+    const pc = ((m%12)+12)%12;
+    const isBlack = [1,3,6,8,10].includes(pc);
+    if (!isBlack) {
+      keys.push({ midi:m, isBlack:false, x: xWhite*keyW, w: keyW });
+      xWhite++;
+    } else {
+      const x = xWhite*keyW - keyW*0.3;
+      keys.push({ midi:m, isBlack:true, x: x, w: keyW*0.6 });
+    }
+  }
+
+  // chromatic view: all equal-width bars
+  let chromKeys = null;
+  if (chromatic) {
+    const bw = wrapRef.current ? wrapRef.current.clientWidth / numKeys : 30;
+    chromKeys = [];
+    for (let i=0; i<numKeys; i++) {
+      chromKeys.push({ midi: startMidi+i, x: i*bw, w: bw });
+    }
+  }
+
+  // Pointer handling for sliding across keys
+  const heldRef = useRef(new Set());
+  const handleStart = (m) => (e) => {
+    e.preventDefault();
+    onNoteOn(m);
+    heldRef.current.add(m);
+  };
+  const handleEnd = (m) => (e) => {
+    e.preventDefault();
+    onNoteOff(m);
+    heldRef.current.delete(m);
+  };
+
+  // Horizontal pan/scroll
+  const onPanStart = (e) => {
+    if (!scrollEnabled) return;
+    const t = e.touches ? e.touches[0] : e;
+    const startX = t.clientX; let dx = 0;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      dx = m.clientX - startX;
+      if (Math.abs(dx) > keyW) {
+        const steps = Math.round(dx / keyW);
+        onScroll(-steps);
+      }
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    if (scrollEnabled) {
+      window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+      window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+    }
+  };
+
+  return (
+    <div className="keyboard" style={{height}} ref={wrapRef}
+         onMouseDown={scrollEnabled ? onPanStart : undefined}
+         onTouchStart={scrollEnabled ? onPanStart : undefined}>
+      {!chromatic && (
+        <div className="keyboard-inner" style={{left:0, right:0}}>
+          {keys.filter(k=>!k.isBlack).map(k => (
+            <div key={k.midi}
+                 className={'pkey white' + (activeMidis.has(k.midi)?' held':'') + (litMidis.has(k.midi)?' lit':'') + (buildLitMidis.has(k.midi)?' build-on':'')}
+                 style={{left:k.x, width:k.w}}
+                 onMouseDown={handleStart(k.midi)} onMouseUp={handleEnd(k.midi)} onMouseLeave={handleEnd(k.midi)}
+                 onTouchStart={handleStart(k.midi)} onTouchEnd={handleEnd(k.midi)}>
+              {midiToName(k.midi).startsWith('C') && <div className="pkey-label">{midiToName(k.midi)}</div>}
+            </div>
+          ))}
+          {keys.filter(k=>k.isBlack).map(k => (
+            <div key={k.midi}
+                 className={'pkey black' + (activeMidis.has(k.midi)?' held':'') + (litMidis.has(k.midi)?' lit':'') + (buildLitMidis.has(k.midi)?' build-on':'')}
+                 style={{left:k.x, width:k.w, height:'60%'}}
+                 onMouseDown={handleStart(k.midi)} onMouseUp={handleEnd(k.midi)} onMouseLeave={handleEnd(k.midi)}
+                 onTouchStart={handleStart(k.midi)} onTouchEnd={handleEnd(k.midi)}>
+            </div>
+          ))}
+        </div>
+      )}
+      {chromatic && chromKeys && (
+        <div className="keyboard-inner" style={{left:0, right:0}}>
+          {chromKeys.map((k,i) => {
+            const isBlack = [1,3,6,8,10].includes(((k.midi%12)+12)%12);
+            return (
+              <div key={k.midi}
+                   className={'pkey ' + (isBlack?'black':'white') + (activeMidis.has(k.midi)?' held':'') + (litMidis.has(k.midi)?' lit':'') + (buildLitMidis.has(k.midi)?' build-on':'')}
+                   style={{left:k.x, width:k.w-1}}
+                   onMouseDown={handleStart(k.midi)} onMouseUp={handleEnd(k.midi)} onMouseLeave={handleEnd(k.midi)}
+                   onTouchStart={handleStart(k.midi)} onTouchEnd={handleEnd(k.midi)}>
+                <div className="pkey-label" style={{color: isBlack ? '#fff' : '#000'}}>{midiToName(k.midi)}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ============================================================
+   FX RACK WINDOW
+   ============================================================ */
+const FXRack = ({ fx, setFx }) => {
+  const set = (k) => (v) => setFx({ ...fx, [k]: v });
+  return (
+    <div>
+      <div className="title-sm">— EQ —</div>
+      <div className="grid-knobs">
+        <Knob label="LOW"  value={fx.eqLow}  min={-12} max={12} step={0.5} onChange={set('eqLow')}  format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="MID"  value={fx.eqMid}  min={-12} max={12} step={0.5} onChange={set('eqMid')}  format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="HI"   value={fx.eqHi}   min={-12} max={12} step={0.5} onChange={set('eqHi')}   format={v=>v.toFixed(1)+'dB'} />
+        <Knob label="CUT"  value={fx.filterCut} min={100} max={18000} step={50} onChange={set('filterCut')} format={v=>Math.round(v)+'Hz'} />
+        <Knob label="RES"  value={fx.filterRes} min={0} max={20} step={0.1} onChange={set('filterRes')} format={v=>v.toFixed(1)} />
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">— FX —</div>
+      <div className="grid-knobs">
+        <Knob label="DRIVE"   value={fx.drive}   min={0} max={1} onChange={set('drive')} />
+        <Knob label="CHORUS"  value={fx.chorus}  min={0} max={1} onChange={set('chorus')} />
+        <Knob label="PHASER"  value={fx.phaser}  min={0} max={1} onChange={set('phaser')} />
+        <Knob label="TREM"    value={fx.tremolo} min={0} max={1} onChange={set('tremolo')} />
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">— DELAY —</div>
+      <div className="grid-knobs">
+        <Knob label="TIME" value={fx.delayTime} min={0.01} max={1.5} onChange={set('delayTime')} format={v=>v.toFixed(2)+'s'} />
+        <Knob label="FBACK" value={fx.delayFb}  min={0} max={0.95} onChange={set('delayFb')} />
+        <Knob label="WET"  value={fx.delayWet} min={0} max={1} onChange={set('delayWet')} />
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">— REVERB —</div>
+      <div className="grid-knobs">
+        <Knob label="WET" value={fx.reverbWet} min={0} max={1} onChange={set('reverbWet')} />
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   SOUND DESIGN WINDOW
+   ============================================================ */
+const SoundDesign = ({ sd, setSd }) => {
+  const set = (k) => (v) => setSd({ ...sd, [k]: v });
+  return (
+    <div>
+      <div className="title-sm">— AMP ENVELOPE —</div>
+      <div className="grid-knobs">
+        <Knob label="A" value={sd.attack}  min={0.001} max={3} step={0.001} onChange={set('attack')}  format={v=>v.toFixed(2)+'s'} />
+        <Knob label="D" value={sd.decay}   min={0.001} max={3} step={0.001} onChange={set('decay')}   format={v=>v.toFixed(2)+'s'} />
+        <Knob label="S" value={sd.sustain} min={0} max={1} onChange={set('sustain')} />
+        <Knob label="R" value={sd.release} min={0.001} max={4} step={0.001} onChange={set('release')} format={v=>v.toFixed(2)+'s'} />
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">— FILTER —</div>
+      <div className="grid-knobs">
+        <Knob label="CUT"   value={sd.cutoff}    min={100} max={18000} step={50} onChange={set('cutoff')}    format={v=>Math.round(v)+'Hz'} />
+        <Knob label="RES"   value={sd.resonance} min={0} max={20} step={0.1} onChange={set('resonance')} />
+        <Knob label="DRIVE" value={sd.drive}     min={0} max={1} onChange={set('drive')} />
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">— LFO / GLIDE —</div>
+      <div className="grid-knobs">
+        <Knob label="LFO RATE" value={sd.lfoRate} min={0.1} max={20} onChange={set('lfoRate')} format={v=>v.toFixed(1)+'Hz'} />
+        <Knob label="LFO AMT"  value={sd.lfoAmt}  min={0}   max={1} onChange={set('lfoAmt')} />
+        <Knob label="GLIDE"    value={sd.glide}   min={0}   max={1} onChange={set('glide')}  format={v=>v.toFixed(2)+'s'} />
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   BANKS WINDOW
+   ============================================================ */
+const BanksWindow = ({ bankId, setBankId, patchIdx, setPatchIdx, voiceMode, setVoiceMode }) => {
+  return (
+    <div>
+      <div className="bank-tabs">
+        {BANK_ORDER.map(b => (
+          <button key={b} className={'bank-tab' + (bankId===b?' active':'')} onClick={()=>setBankId(b)}>
+            {BANKS[b].label}
+          </button>
+        ))}
+      </div>
+      <div className="patch-grid">
+        {BANKS[bankId].patches.map((p, i) => (
+          <button key={i} className={'patch-btn' + (patchIdx===i?' active':'')} onClick={()=>setPatchIdx(i)}>
+            {String(i+1).padStart(2,'0')} · {p.name}
+          </button>
+        ))}
+      </div>
+      <div className="divider"></div>
+      <div className="title-sm">VOICE MODE</div>
+      <div className="row">
+        {['poly','mono','legato'].map(m => (
+          <button key={m} className={'pill' + (voiceMode===m?' on':'')} onClick={()=>setVoiceMode(m)}>{m.toUpperCase()}</button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   CHORD BANK WINDOW
+   ============================================================ */
+const ChordBankWindow = ({ onSelectChord, rootFilter, setRootFilter }) => {
+  const qualities = Object.keys(CHORD_FORMULAS);
+  return (
+    <div>
+      <div className="chord-letter-tabs">
+        {ROOT_NOTES.map(r => (
+          <button key={r} className={'chord-letter-tab' + (rootFilter===r?' active':'')} onClick={()=>setRootFilter(r)}>{r}</button>
+        ))}
+      </div>
+      <div className="chord-grid">
+        {qualities.map(q => (
+          <button key={q} className="chord-btn" onClick={()=>onSelectChord(rootFilter, q)}>
+            {rootFilter}{q}
+          </button>
+        ))}
+      </div>
+      <div className="divider"></div>
+      <div className="small" style={{color:'var(--neon-dim)'}}>
+        Tip: tap a chord to illuminate it on the keys. In Build Mode, save it to a pad with the Load Chord button in Pads/Sampler.
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   PADS / SAMPLER WINDOW
+   ============================================================ */
+const PadsSamplerWindow = ({
+  pads, setPads, currentPadIdx, setCurrentPadIdx,
+  cycleEnabled, setCycleEnabled, cycleMode, setCycleMode,
+  armed, setArmed, sustainHold, setSustainHold,
+  onTriggerPad, onLoadChord, buildMode, setBuildMode,
+}) => {
+  const fileRef = useRef(null);
+  const arrowBoxRef = useRef(null);
+  const [arrowFocused, setArrowFocused] = useState(false);
+
+  const addPad = () => {
+    setPads([...pads, { name:'Empty', enabled:true, type:'empty', data:null, chord:null }]);
+  };
+  const removePad = () => {
+    if (pads.length > 1) setPads(pads.slice(0, -1));
+  };
+  const clearAll = () => setPads([]);
+  const duplicate = (i) => {
+    const copy = JSON.parse(JSON.stringify(pads[i]));
+    setPads([...pads.slice(0,i+1), copy, ...pads.slice(i+1)]);
+  };
+  const deletePad = (i) => setPads(pads.filter((_,j)=>j!==i));
+  const togglePad = (i) => {
+    const np = pads.slice(); np[i] = { ...np[i], enabled: !np[i].enabled }; setPads(np);
+  };
+
+  const onUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    files.forEach((file, k) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const data = ev.target.result; // ArrayBuffer
+        Tone.context.decodeAudioData(data.slice(0)).then(buffer => {
+          const np = pads.slice();
+          const padIdx = currentPadIdx + k;
+          if (padIdx < np.length) {
+            np[padIdx] = { ...np[padIdx], name: file.name.replace(/\.[^.]+$/,'').slice(0,20), type:'audio', data: buffer, chord:null };
+          } else {
+            np.push({ name: file.name.replace(/\.[^.]+$/,'').slice(0,20), enabled:true, type:'audio', data: buffer, chord:null });
+          }
+          setPads(np);
+        }).catch(()=>{});
+      };
+      reader.readAsArrayBuffer(file);
+    });
+    e.target.value = '';
+  };
+
+  return (
+    <div>
+      <div className="row">
+        <button className="pill" onClick={addPad}>+ ADD</button>
+        <button className="pill" onClick={removePad}>− REM</button>
+        <button className="pill" onClick={clearAll}>CLEAR ALL</button>
+        <button className="pill" onClick={()=>fileRef.current.click()}>UPLOAD</button>
+        <input ref={fileRef} type="file" accept="audio/*" multiple onChange={onUpload} style={{display:'none'}}/>
+      </div>
+      <div className="row">
+        <button className={'pill' + (sustainHold?' on':'')} onClick={()=>setSustainHold(!sustainHold)}>SUSTAIN</button>
+        <button className={'pill accent' + (armed?' on':'')} onClick={()=>setArmed(!armed)}>● ARM</button>
+        <button className={'pill' + (cycleEnabled?' on':'')} onClick={()=>setCycleEnabled(!cycleEnabled)}>CYCLE</button>
+        <button className="pill" onClick={()=>setCycleMode(cycleMode==='loop'?'pingpong':'loop')}>{cycleMode==='loop'?'LOOP':'PING-PONG'}</button>
+      </div>
+      <div className="row">
+        <button className={'pill accent' + (buildMode?' on':'')} onClick={()=>setBuildMode(!buildMode)}>BUILD MODE</button>
+        <button className="pill" onClick={()=>onLoadChord(currentPadIdx)}>LOAD CHORD → PAD</button>
+      </div>
+      <div ref={arrowBoxRef}
+           onClick={()=>setArrowFocused(!arrowFocused)}
+           style={{border:'1px solid '+(arrowFocused?'var(--accent)':'var(--neon-dim)'), padding:'6px', display:'flex', gap:'8px', alignItems:'center', marginBottom:'8px', cursor:'pointer'}}>
+        <button className="pill" onClick={(e)=>{e.stopPropagation(); setCurrentPadIdx(Math.max(0,currentPadIdx-1))}}>◀</button>
+        <span className="small">{arrowFocused ? 'Keyboard ←/→ active' : 'Tap to focus ← →'}</span>
+        <button className="pill" onClick={(e)=>{e.stopPropagation(); setCurrentPadIdx(Math.min(pads.length-1,currentPadIdx+1))}}>▶</button>
+      </div>
+      <div className="pads-grid" style={{gridTemplateColumns:`repeat(${Math.min(4, Math.max(1,pads.length))}, 1fr)`}}>
+        {pads.map((pad, i) => (
+          <div key={i}
+            className={'pad' + (i===currentPadIdx?' cycle-current':'') + (!pad.enabled?' muted':'') + (armed && i===currentPadIdx?' armed':'')}
+            onMouseDown={(e)=>{e.preventDefault(); onTriggerPad(i, true)}}
+            onMouseUp={()=>onTriggerPad(i, false)}
+            onMouseLeave={()=>onTriggerPad(i, false)}
+            onTouchStart={(e)=>{e.preventDefault(); onTriggerPad(i, true)}}
+            onTouchEnd={()=>onTriggerPad(i, false)}>
+            <div className="pad-toggle"
+                 onClick={(e)=>{e.stopPropagation(); togglePad(i)}}
+                 style={{background: pad.enabled ? 'var(--neon)' : '#000'}}></div>
+            <span className="pad-name">{i+1}. {pad.name}</span>
+            <div className="row" style={{justifyContent:'center', gap:4, marginBottom:0}}>
+              <span style={{fontSize:8, color:'var(--neon-dim)'}}
+                    onClick={(e)=>{e.stopPropagation(); deletePad(i)}}>×</span>
+              <span style={{fontSize:8, color:'var(--neon-dim)'}}
+                    onClick={(e)=>{e.stopPropagation(); duplicate(i)}}>⎘</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   MOD WHEEL WINDOW
+   ============================================================ */
+const ModWheelWindow = ({ modValue, setModValue, pitchValue, setPitchValue, bendRange, setBendRange, glideMs, setGlideMs, modEffect, setModEffect }) => {
+  const onMod = (e) => {
+    const t = e.touches ? e.touches[0] : e;
+    const startY = t.clientY, ov = modValue;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      const dy = startY - m.clientY;
+      setModValue(Math.max(0, Math.min(1, ov + dy/200)));
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+  const onPitch = (e) => {
+    const t = e.touches ? e.touches[0] : e;
+    const startY = t.clientY, ov = pitchValue;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      const dy = startY - m.clientY;
+      setPitchValue(Math.max(-1, Math.min(1, ov + dy/100)));
+    };
+    const up = () => {
+      setPitchValue(0); // springs back
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+
+  const effects = ['Shimmer Reverb','Tape Wow','Detune Choir','Filter Sweep','Ring Mod','Bit Crush','Vibrato','Auto Wah','Tremolo Cosmic','Chorus Wide'];
+
+  return (
+    <div className="modwheel-wrap">
+      <div>
+        <div className="mod-slider" onMouseDown={onMod} onTouchStart={onMod}>
+          <div className="mod-slider-handle" style={{bottom: (modValue*100) + '%'}}></div>
+        </div>
+        <div className="mod-slider-label">MOD<br/>{(modValue*100|0)}%</div>
+      </div>
+      <div>
+        <div className="mod-slider" onMouseDown={onPitch} onTouchStart={onPitch}>
+          <div className="mod-slider-handle" style={{bottom: (50 + pitchValue*50) + '%'}}></div>
+        </div>
+        <div className="mod-slider-label">PITCH<br/>{pitchValue>0?'+':''}{(pitchValue*bendRange).toFixed(1)}st</div>
+      </div>
+      <div style={{flex:1}}>
+        <div className="title-sm">SETTINGS</div>
+        <div className="row">
+          <label>Bend Range</label>
+          <input type="range" min="1" max="24" value={bendRange} onChange={e=>setBendRange(+e.target.value)} />
+          <span>{bendRange} st</span>
+        </div>
+        <div className="row">
+          <label>Glide (ms)</label>
+          <input type="range" min="0" max="500" step="10" value={glideMs} onChange={e=>setGlideMs(+e.target.value)} />
+          <span>{glideMs}</span>
+        </div>
+        <div className="divider"></div>
+        <div className="title-sm">MOD EFFECT</div>
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4px'}}>
+          {effects.map(fx => (
+            <button key={fx} className={'pill' + (modEffect===fx?' on':'')} onClick={()=>setModEffect(fx)}>{fx}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   3D SOUND WINDOW
+   ============================================================ */
+const ThreeDSoundWindow = ({ enabled, setEnabled, mode, setMode, points, setPoints, selectedPoint, setSelectedPoint, onDice }) => {
+  const wrapRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  // Background visual
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const draw = () => {
+      const w = canvas.width = canvas.clientWidth * 2;
+      const h = canvas.height = canvas.clientHeight * 2;
+      ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle = 'rgba(0,255,208,0.4)';
+      ctx.lineWidth = 1;
+      if (mode === 'stage') {
+        // stage with speakers
+        ctx.strokeRect(w*0.15, h*0.65, w*0.7, h*0.25);
+        // speakers
+        ctx.strokeRect(w*0.05, h*0.5, w*0.1, h*0.35);
+        ctx.strokeRect(w*0.85, h*0.5, w*0.1, h*0.35);
+        ctx.beginPath();
+        ctx.arc(w*0.5, h*0.78, w*0.05, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(0,255,208,0.5)';
+        ctx.font = '24px monospace';
+        ctx.fillText('STAGE', w*0.42, h*0.95);
+      } else if (mode === 'head') {
+        // head silhouette
+        ctx.beginPath();
+        ctx.ellipse(w/2, h/2, w*0.18, h*0.28, 0, 0, Math.PI*2);
+        ctx.stroke();
+        // ears
+        ctx.beginPath();
+        ctx.ellipse(w*0.32, h/2, w*0.03, h*0.06, 0, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(w*0.68, h/2, w*0.03, h*0.06, 0, 0, Math.PI*2);
+        ctx.stroke();
+        // nose direction
+        ctx.beginPath(); ctx.moveTo(w/2, h*0.22); ctx.lineTo(w/2-8, h*0.27); ctx.lineTo(w/2+8, h*0.27); ctx.closePath(); ctx.stroke();
+      } else {
+        // grid
+        for (let i = 0; i <= 10; i++) {
+          ctx.beginPath(); ctx.moveTo((i/10)*w, 0); ctx.lineTo((i/10)*w, h); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, (i/10)*h); ctx.lineTo(w, (i/10)*h); ctx.stroke();
+        }
+        // center crosshair
+        ctx.strokeStyle = 'rgba(0,255,208,0.8)';
+        ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h); ctx.stroke();
+      }
+    };
+    draw();
+    const obs = new ResizeObserver(draw);
+    obs.observe(canvas);
+    return () => obs.disconnect();
+  }, [mode]);
+
+  const dragPoint = (idx) => (e) => {
+    e.preventDefault(); e.stopPropagation();
+    setSelectedPoint(idx);
+    const t = e.touches ? e.touches[0] : e;
+    const startX = t.clientX, startY = t.clientY;
+    const ox = points[idx].x, oy = points[idx].y;
+    const rect = wrapRef.current.getBoundingClientRect();
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      const nx = Math.max(0, Math.min(1, ox + (m.clientX - startX)/rect.width));
+      const ny = Math.max(0, Math.min(1, oy + (m.clientY - startY)/rect.height));
+      const np = points.slice();
+      np[idx] = { ...np[idx], x:nx, y:ny };
+      setPoints(np);
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, {passive:false}); window.addEventListener('touchend', up);
+  };
+
+  const addPoint = () => {
+    const flavors = ['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom','Air Bell','Tape Choir'];
+    const fl = flavors[Math.floor(Math.random()*flavors.length)];
+    setPoints([...points, {
+      x: 0.2 + Math.random()*0.6, y: 0.2 + Math.random()*0.6,
+      flavor: fl, mix: 0.5 + Math.random()*0.4, isCenter: false
+    }]);
+  };
+  const removePoint = () => {
+    if (points.length > 1) setPoints(points.slice(0,-1));
+  };
+
+  return (
+    <div>
+      <div className="row">
+        <button className={'pill accent' + (enabled?' on':'')} onClick={()=>setEnabled(!enabled)}>{enabled?'● ON':'○ OFF'}</button>
+        <button className="pill" onClick={addPoint}>+ POINT</button>
+        <button className="pill" onClick={removePoint}>− POINT</button>
+        <button className="pill accent" onClick={onDice}>🎲 DICE</button>
+      </div>
+      <div className="threed-mode-row">
+        {['stage','head','grid'].map(m => (
+          <button key={m} className={'pill' + (mode===m?' on':'')} onClick={()=>setMode(m)}>{m.toUpperCase()}</button>
+        ))}
+      </div>
+      <div className="threed-canvas-wrap" ref={wrapRef}>
+        <canvas ref={canvasRef}></canvas>
+        {points.map((p, i) => (
+          <div key={i}
+               className={'threed-orb' + (i===selectedPoint?' selected':'') + (p.isCenter?' center':'')}
+               style={{left: (p.x*100)+'%', top: (p.y*100)+'%'}}
+               onMouseDown={dragPoint(i)} onTouchStart={dragPoint(i)}
+               title={p.flavor}>
+          </div>
+        ))}
+      </div>
+      {selectedPoint != null && points[selectedPoint] && (
+        <div style={{marginTop:8}}>
+          <div className="title-sm">POINT: {points[selectedPoint].flavor}</div>
+          <div className="row">
+            <label>Mix</label>
+            <input type="range" min="0" max="1" step="0.01" value={points[selectedPoint].mix}
+              onChange={e=>{const np = points.slice(); np[selectedPoint] = {...np[selectedPoint], mix:+e.target.value}; setPoints(np);}} />
+            <span>{(points[selectedPoint].mix*100|0)}%</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ============================================================
+   COLOR CUSTOMIZE WINDOW
+   ============================================================ */
+const ColorCustomize = ({ theme, setTheme }) => {
+  const set = (k) => (e) => setTheme({ ...theme, [k]: e.target.value });
+  const randomize = () => {
+    const rand = () => '#' + [0,1,2].map(()=>Math.floor(Math.random()*255).toString(16).padStart(2,'0')).join('');
+    setTheme({
+      ...theme,
+      neon: rand(), accent: rand(), text: '#eaeaea',
+      whiteKey: '#' + [0,1,2].map(()=>Math.floor(200+Math.random()*55).toString(16).padStart(2,'0')).join(''),
+      blackKey: '#' + [0,1,2].map(()=>Math.floor(Math.random()*70).toString(16).padStart(2,'0')).join(''),
+    });
+  };
+  return (
+    <div>
+      <div className="color-row"><label>Neon</label><input type="color" value={theme.neon} onChange={set('neon')} /></div>
+      <div className="color-row"><label>Accent</label><input type="color" value={theme.accent} onChange={set('accent')} /></div>
+      <div className="color-row"><label>Text</label><input type="color" value={theme.text} onChange={set('text')} /></div>
+      <div className="color-row"><label>White Keys</label><input type="color" value={theme.whiteKey} onChange={set('whiteKey')} /></div>
+      <div className="color-row"><label>Black Keys</label><input type="color" value={theme.blackKey} onChange={set('blackKey')} /></div>
+      <div className="color-row">
+        <label>Brightness</label>
+        <input type="range" min="0.5" max="1.5" step="0.01" value={theme.bright} onChange={set('bright')} />
+        <span>{(+theme.bright).toFixed(2)}</span>
+      </div>
+      <div className="color-row">
+        <label>Contrast</label>
+        <input type="range" min="0.5" max="1.5" step="0.01" value={theme.contrast} onChange={set('contrast')} />
+        <span>{(+theme.contrast).toFixed(2)}</span>
+      </div>
+      <div className="divider"></div>
+      <button className="pill accent" onClick={randomize}>🎲 RANDOMIZE</button>
+    </div>
+  );
+};
+
+/* ============================================================
+   SHORTCUTS WINDOW (with PNG download)
+   ============================================================ */
+const ShortcutsWindow = () => {
+  const downloadPNG = () => {
+    const c = document.createElement('canvas');
+    c.width = 1000; c.height = 800;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle = '#00ffd0';
+    ctx.font = 'bold 32px monospace';
+    ctx.shadowColor = '#00ffd0'; ctx.shadowBlur = 12;
+    ctx.fillText('HOLD IT DOWN — SHORTCUTS', 40, 60);
+    ctx.shadowBlur = 0;
+    ctx.font = '16px monospace';
+    let y = 120;
+    const entries = Object.entries(SHORTCUTS);
+    const palette = ['#00ffd0','#ff4dd2','#ffd000','#00d0ff','#a0ff00','#ff8000'];
+    entries.forEach(([k,v], i) => {
+      ctx.fillStyle = palette[i % palette.length];
+      ctx.fillRect(40, y-18, 120, 24);
+      ctx.fillStyle = '#000';
+      ctx.fillText(k, 50, y);
+      ctx.fillStyle = '#eaeaea';
+      ctx.fillText(v, 180, y);
+      y += 32;
+      if (y > 770) { y = 120; }
+    });
+    ctx.fillStyle = '#00ffd0'; ctx.font = '14px monospace';
+    ctx.fillText('designed by Mario Garcia', 40, 790);
+    c.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'hold-it-down-shortcuts.png';
+      a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    });
+  };
+  const palette = ['var(--neon)','var(--accent)','#ffd000','#00d0ff','#a0ff00','#ff8000'];
+  return (
+    <div>
+      <button className="pill accent" onClick={downloadPNG} style={{marginBottom:10}}>⬇ DOWNLOAD PNG</button>
+      <div className="shortcut-grid">
+        {Object.entries(SHORTCUTS).map(([k,v], i) => (
+          <div key={k} className="shortcut-item" style={{borderColor: palette[i%palette.length]}}>
+            <span className="shortcut-key" style={{color: palette[i%palette.length]}}>{k}</span>
+            <span>{v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================
+   MAIN APP
+   ============================================================ */
+const App = () => {
+  const [view, setView] = useState('home');
+
+  // -- audio engine readiness
+  const [audioReady, setAudioReady] = useState(false);
+
+  // -- sound selection
+  const [bankId, setBankId] = useState('ep');
+  const [patchIdx, setPatchIdx] = useState(0);
+  const [voiceMode, setVoiceMode] = useState('poly'); // poly/mono/legato
+
+  // -- piano state
+  const [keysHeight, setKeysHeight] = useState(160);
+  const [startMidi, setStartMidi] = useState(48); // C3
+  const [numKeys, setNumKeys] = useState(36);
+  const [hideKeys, setHideKeys] = useState(false);
+  const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [chromatic, setChromatic] = useState(false);
+  const [octaveShift, setOctaveShift] = useState(0);
+  const [transposeShift, setTransposeShift] = useState(0);
+  const [activeMidis, setActiveMidis] = useState(new Set());
+  const [litMidis, setLitMidis] = useState(new Set());
+  const [buildMode, setBuildMode] = useState(false);
+  const [buildShape, setBuildShape] = useState(new Set());
+  const [sustain, setSustain] = useState(false);
+  const [sustainHeld, setSustainHeld] = useState(new Set());
+
+  // -- top bar
+  const [topbarOpen, setTopbarOpen] = useState(true);
+  const [masterVol, setMasterVol] = useState(0.7);
+
+  // -- windows
+  const [windows, setWindows] = useState({}); // {id: {open, x, y, w, h, z}}
+  const [topZ, setTopZ] = useState(10);
+  const openWindow = (id, defaults) => {
+    setTopZ(z => z+1);
+    setWindows(w => ({ ...w, [id]: { ...defaults, ...w[id], open: true, z: topZ+1 } }));
+  };
+  const closeWindow = (id) => setWindows(w => ({ ...w, [id]: { ...w[id], open: false } }));
+  const focusWindow = (id) => setWindows(w => { setTopZ(z=>z+1); return { ...w, [id]: { ...w[id], z: topZ+1 } }; });
+  const setWindow = (id, props) => setWindows(w => ({ ...w, [id]: { ...w[id], ...props } }));
+  const toggleWindow = (id, defaults) => {
+    if (windows[id] && windows[id].open) closeWindow(id);
+    else openWindow(id, defaults);
+  };
+
+  // -- FX
+  const [fx, setFx] = useState({
+    eqLow:0, eqMid:0, eqHi:0,
+    filterCut:18000, filterRes:0,
+    drive:0, chorus:0, phaser:0, tremolo:0,
+    delayTime:0.3, delayFb:0.25, delayWet:0.0,
+    reverbWet:0.15
+  });
+
+  // -- sound design
+  const [sd, setSd] = useState({
+    attack:0.005, decay:0.3, sustain:0.7, release:0.5,
+    cutoff:18000, resonance:0, drive:0,
+    lfoRate:5, lfoAmt:0, glide:0
+  });
+
+  // -- chord bank
+  const [rootFilter, setRootFilter] = useState('C');
+
+  // -- pads / sampler
+  const [pads, setPads] = useState(
+    Array.from({length:8}).map((_,i)=>({ name:'Empty', enabled:true, type:'empty', data:null, chord:null }))
+  );
+  const [currentPadIdx, setCurrentPadIdx] = useState(0);
+  const [cycleEnabled, setCycleEnabled] = useState(false);
+  const [cycleMode, setCycleMode] = useState('loop');
+  const cycleDir = useRef(1);
+  const [armed, setArmed] = useState(false);
+  const [sustainHold, setSustainHold] = useState(true);
+  const [playingPads, setPlayingPads] = useState(new Set());
+
+  // -- mod wheel / pitch bend
+  const [modValue, setModValue] = useState(0);
+  const [pitchValue, setPitchValue] = useState(0);
+  const [bendRange, setBendRange] = useState(2);
+  const [glideMs, setGlideMs] = useState(0);
+  const [modEffect, setModEffect] = useState('Shimmer Reverb');
+
+  // -- 3D sound
+  const [threedOn, setThreedOn] = useState(false);
+  const [threedMode, setThreedMode] = useState('grid');
+  const [threedPoints, setThreedPoints] = useState([
+    { x:0.5, y:0.5, flavor:'Center', mix:0.7, isCenter:true }
+  ]);
+  const [threedSelected, setThreedSelected] = useState(0);
+
+  // -- theme
+  const [theme, setTheme] = useState({
+    bg:'#000000', neon:'#00ffd0', accent:'#ff4dd2', text:'#d8fff8',
+    whiteKey:'#f4f9f6', blackKey:'#0a1413', bright:1, contrast:1
+  });
+
+  // -- play/stop transport
+  const [playing, setPlaying] = useState(false);
+
+  // ===== current patch object =====
+  const currentPatch = useMemo(() => {
+    const base = BANKS[bankId].patches[patchIdx];
+    // apply sound design overrides
+    return {
+      ...base,
+      amp: [sd.attack, sd.decay, sd.sustain, sd.release],
+      filt: sd.cutoff,
+      q: sd.resonance,
+    };
+  }, [bankId, patchIdx, sd]);
+
+  // ===== Apply theme =====
+  useEffect(() => {
+    const r = document.documentElement.style;
+    r.setProperty('--bg', theme.bg);
+    r.setProperty('--neon', theme.neon);
+    r.setProperty('--neon-dim', theme.neon);
+    r.setProperty('--accent', theme.accent);
+    r.setProperty('--text', theme.text);
+    r.setProperty('--white-key', theme.whiteKey);
+    r.setProperty('--black-key', theme.blackKey);
+    r.setProperty('--ui-bright', theme.bright);
+    r.setProperty('--ui-contrast', theme.contrast);
+  }, [theme]);
+
+  // ===== Apply FX =====
+  useEffect(() => {
+    if (audioReady) AE.setFX(fx);
+  }, [fx, audioReady]);
+
+  // ===== Apply master volume =====
+  useEffect(() => {
+    if (audioReady) AE.setMaster(masterVol);
+  }, [masterVol, audioReady]);
+
+  // ===== Apply pitch bend / mod =====
+  useEffect(() => {
+    if (!audioReady) return;
+    AE.applyDetune(pitchValue * bendRange * 100); // cents
+    // Mod effect modulates FX layer
+    if (modEffect === 'Shimmer Reverb') AE.setFX({ ...fx, reverbWet: Math.max(fx.reverbWet, modValue*0.8) });
+    if (modEffect === 'Tape Wow') AE.setFX({ ...fx, tremolo: Math.max(fx.tremolo, modValue*0.6) });
+    if (modEffect === 'Filter Sweep') AE.setFX({ ...fx, filterCut: 600 + (1-modValue)*16000 });
+    if (modEffect === 'Detune Choir') AE.setFX({ ...fx, chorus: Math.max(fx.chorus, modValue) });
+    if (modEffect === 'Bit Crush') AE.setFX({ ...fx, drive: Math.max(fx.drive, modValue*0.8) });
+    if (modEffect === 'Tremolo Cosmic') AE.setFX({ ...fx, tremolo: Math.max(fx.tremolo, modValue), phaser: Math.max(fx.phaser, modValue) });
+    if (modEffect === 'Chorus Wide') AE.setFX({ ...fx, chorus: Math.max(fx.chorus, modValue*0.9) });
+    if (modEffect === 'Auto Wah') AE.setFX({ ...fx, filterCut: 400 + modValue*4000, filterRes: 4 + modValue*8 });
+  }, [pitchValue, bendRange, modValue, modEffect, audioReady]);
+
+  // ===== Apply 3D state =====
+  useEffect(() => {
+    if (!audioReady) return;
+    const mainPt = threedPoints[threedSelected] || threedPoints[0] || {x:0.5,y:0.5,mix:0.5};
+    AE.set3D(threedOn, (mainPt.x-0.5)*2, (mainPt.y-0.5)*2, 0, mainPt.mix, 0.4);
+  }, [threedOn, threedPoints, threedSelected, audioReady]);
+
+  // ===== Note handlers =====
+  const noteOnRaw = useCallback((midi) => {
+    if (!audioReady) return;
+    const m = midi + octaveShift*12 + transposeShift;
+    if (buildMode) {
+      setBuildShape(s => { const ns = new Set(s); ns.has(m) ? ns.delete(m) : ns.add(m); return ns; });
+      return;
+    }
+    if (voiceMode !== 'poly') {
+      // mono / legato — kill others
+      Object.keys(AE.voices).forEach(k => AE.noteOff(+k));
+    }
+    AE.noteOn(m, currentPatch);
+    setActiveMidis(s => { const ns = new Set(s); ns.add(m); return ns; });
+    // armed recording? we don't actually record samples here, but we add the note to current pad
+    if (armed && pads[currentPadIdx]) {
+      const np = pads.slice();
+      np[currentPadIdx] = { ...np[currentPadIdx], type:'note', data: m, name: midiToName(m) };
+      setPads(np);
+    }
+  }, [audioReady, octaveShift, transposeShift, voiceMode, currentPatch, buildMode, armed, pads, currentPadIdx]);
+
+  const noteOffRaw = useCallback((midi) => {
+    if (!audioReady) return;
+    const m = midi + octaveShift*12 + transposeShift;
+    if (buildMode) return;
+    if (sustain || sustainHeld.has(m)) {
+      setSustainHeld(s => { const ns = new Set(s); ns.add(m); return ns; });
+      return;
+    }
+    AE.noteOff(m);
+    setActiveMidis(s => { const ns = new Set(s); ns.delete(m); return ns; });
+  }, [audioReady, octaveShift, transposeShift, buildMode, sustain, sustainHeld]);
+
+  // sustain release
+  useEffect(() => {
+    if (!sustain) {
+      sustainHeld.forEach(m => {
+        AE.noteOff(m);
+        setActiveMidis(s => { const ns = new Set(s); ns.delete(m); return ns; });
+      });
+      setSustainHeld(new Set());
+    }
+  }, [sustain]);
+
+  // ===== Chord bank: light up notes =====
+  const onSelectChord = useCallback((root, q) => {
+    const formula = CHORD_FORMULAS[q];
+    const rootMidi = 60 + ROOT_TO_PC[root];
+    const midis = formula.map(i => rootMidi + i);
+    setLitMidis(new Set(midis));
+    // play preview
+    midis.forEach(m => {
+      AE.noteOn(m, currentPatch);
+      setTimeout(()=>AE.noteOff(m), 800);
+    });
+    if (buildMode) {
+      setBuildShape(s => { const ns = new Set(s); midis.forEach(m=>ns.add(m)); return ns; });
+    }
+  }, [currentPatch, buildMode]);
+
+  // ===== Transpose: shift lit keys =====
+  const transposeUp = () => {
+    setTransposeShift(t => t+1);
+    setLitMidis(s => new Set([...s].map(m => m+1)));
+    setBuildShape(s => new Set([...s].map(m => m+1)));
+  };
+  const transposeDown = () => {
+    setTransposeShift(t => t-1);
+    setLitMidis(s => new Set([...s].map(m => m-1)));
+    setBuildShape(s => new Set([...s].map(m => m-1)));
+  };
+
+  // ===== Build mode: play shape =====
+  const playBuildShape = () => {
+    if (buildShape.size === 0) return;
+    buildShape.forEach(m => {
+      AE.noteOn(m, currentPatch);
+      setTimeout(()=>AE.noteOff(m), 1500);
+    });
+  };
+  const stopAll = () => {
+    AE.allNotesOff();
+    setActiveMidis(new Set());
+    setSustainHeld(new Set());
+  };
+  const clearShape = () => { setBuildShape(new Set()); setLitMidis(new Set()); };
+
+  // ===== Pad triggers =====
+  const padNodeRefs = useRef({});
+  const triggerPad = useCallback((i, on) => {
+    const pad = pads[i];
+    if (!pad || !pad.enabled) return;
+    if (on) {
+      setPlayingPads(s => { const ns = new Set(s); ns.add(i); return ns; });
+      if (pad.type === 'audio' && pad.data) {
+        const player = new Tone.Player(pad.data).connect(AE.voicesInput());
+        player.start();
+        padNodeRefs.current[i] = player;
+      } else if (pad.type === 'note' && typeof pad.data === 'number') {
+        AE.noteOn(pad.data, currentPatch);
+      } else if (pad.type === 'chord' && Array.isArray(pad.chord)) {
+        pad.chord.forEach(m => AE.noteOn(m, currentPatch));
+      }
+      if (cycleEnabled) {
+        // advance current pad
+        if (cycleMode === 'loop') {
+          setCurrentPadIdx(idx => (idx+1) % pads.length);
+        } else {
+          setCurrentPadIdx(idx => {
+            let ni = idx + cycleDir.current;
+            if (ni >= pads.length) { ni = pads.length-2; cycleDir.current = -1; }
+            else if (ni < 0) { ni = 1; cycleDir.current = 1; }
+            return ni;
+          });
+        }
+      }
+    } else {
+      if (!sustainHold) {
+        setPlayingPads(s => { const ns = new Set(s); ns.delete(i); return ns; });
+        if (pad.type === 'audio' && padNodeRefs.current[i]) {
+          try { padNodeRefs.current[i].stop(); padNodeRefs.current[i].dispose(); } catch(e){}
+          delete padNodeRefs.current[i];
+        } else if (pad.type === 'note' && typeof pad.data === 'number') {
+          AE.noteOff(pad.data);
+        } else if (pad.type === 'chord' && Array.isArray(pad.chord)) {
+          pad.chord.forEach(m => AE.noteOff(m));
+        }
+      }
+    }
+  }, [pads, currentPatch, cycleEnabled, cycleMode, sustainHold]);
+
+  // ===== Load chord into pad =====
+  const loadChordToPad = useCallback((idx) => {
+    const chord = [...buildShape];
+    if (!chord.length) {
+      // fall back to lit
+      [...litMidis].forEach(m => chord.push(m));
+    }
+    if (!chord.length) return;
+    const np = pads.slice();
+    if (idx >= np.length) {
+      np.push({ name: 'Chord '+(chord.length), enabled:true, type:'chord', data:null, chord });
+    } else {
+      np[idx] = { ...np[idx], type:'chord', chord, name:'Chord '+(chord.length) };
+    }
+    setPads(np);
+  }, [buildShape, litMidis, pads]);
+
+  // ===== 3D dice randomize =====
+  const dice3D = () => {
+    const flavors = ['Shimmer','Aurora','Cosmic','Halo','Glitter','Sub Sky','Dream Echo','Vapor','Crystal','Phantom'];
+    const n = 3 + Math.floor(Math.random()*4);
+    setThreedPoints(Array.from({length:n}).map((_,i)=>({
+      x: 0.1+Math.random()*0.8, y: 0.1+Math.random()*0.8,
+      flavor: flavors[Math.floor(Math.random()*flavors.length)],
+      mix: 0.3+Math.random()*0.6, isCenter: i===0
+    })));
+  };
+
+  // ===== Save / Open project =====
+  const saveProject = () => {
+    const data = {
+      version: 1,
+      bankId, patchIdx, voiceMode,
+      keysHeight, startMidi, numKeys, hideKeys, scrollEnabled, chromatic,
+      octaveShift, transposeShift,
+      masterVol, fx, sd,
+      pads: pads.map(p => ({ ...p, data: p.type==='audio' ? null : p.data })), // can't serialize audio buffers
+      bendRange, glideMs, modEffect, modValue,
+      threedOn, threedMode, threedPoints,
+      theme,
+      buildShape: [...buildShape],
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'hold-it-down-project.hid.json';
+    a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  };
+  const openProject = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json,.hid,application/json';
+    inp.onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = (ev) => {
+        try {
+          const d = JSON.parse(ev.target.result);
+          d.bankId && setBankId(d.bankId);
+          typeof d.patchIdx === 'number' && setPatchIdx(d.patchIdx);
+          d.voiceMode && setVoiceMode(d.voiceMode);
+          typeof d.keysHeight === 'number' && setKeysHeight(d.keysHeight);
+          typeof d.startMidi === 'number' && setStartMidi(d.startMidi);
+          typeof d.numKeys === 'number' && setNumKeys(d.numKeys);
+          typeof d.hideKeys === 'boolean' && setHideKeys(d.hideKeys);
+          typeof d.scrollEnabled === 'boolean' && setScrollEnabled(d.scrollEnabled);
+          typeof d.chromatic === 'boolean' && setChromatic(d.chromatic);
+          typeof d.octaveShift === 'number' && setOctaveShift(d.octaveShift);
+          typeof d.transposeShift === 'number' && setTransposeShift(d.transposeShift);
+          typeof d.masterVol === 'number' && setMasterVol(d.masterVol);
+          d.fx && setFx(d.fx);
+          d.sd && setSd(d.sd);
+          Array.isArray(d.pads) && setPads(d.pads);
+          typeof d.bendRange === 'number' && setBendRange(d.bendRange);
+          typeof d.glideMs === 'number' && setGlideMs(d.glideMs);
+          d.modEffect && setModEffect(d.modEffect);
+          typeof d.modValue === 'number' && setModValue(d.modValue);
+          typeof d.threedOn === 'boolean' && setThreedOn(d.threedOn);
+          d.threedMode && setThreedMode(d.threedMode);
+          Array.isArray(d.threedPoints) && setThreedPoints(d.threedPoints);
+          d.theme && setTheme(d.theme);
+          Array.isArray(d.buildShape) && setBuildShape(new Set(d.buildShape));
+        } catch(err) { alert('Failed to load: '+ err.message); }
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  };
+
+  // ===== Keyboard shortcuts =====
+  useEffect(() => {
+    const down = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const k = e.key.toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && k === 's') { e.preventDefault(); saveProject(); return; }
+      if ((e.metaKey || e.ctrlKey) && k === 'o') { e.preventDefault(); openProject(); return; }
+      if ((e.metaKey || e.ctrlKey) && k === 'k') { e.preventDefault(); AE.killAll(); setActiveMidis(new Set()); setSustainHeld(new Set()); return; }
+      if (e.shiftKey && k === 'shift') return;
+      if (k === 'shift') return;
+      if (e.key === 'Shift') { setSustain(true); return; }
+      if (k in KEY_MAP_NOTES && !e.repeat) { noteOnRaw(KEY_MAP_NOTES[k]); return; }
+      if (k === 'z') { setOctaveShift(o => o-1); return; }
+      if (k === 'x') { setOctaveShift(o => o+1); return; }
+      if (k === ',') { transposeDown(); return; }
+      if (k === '.') { transposeUp(); return; }
+      if (e.key === 'ArrowUp')   { setPitchValue(1); return; }
+      if (e.key === 'ArrowDown') { setPitchValue(-1); return; }
+      if (e.key === 'ArrowLeft'  && !e.repeat) { setCurrentPadIdx(i => Math.max(0,i-1)); return; }
+      if (e.key === 'ArrowRight' && !e.repeat) { setCurrentPadIdx(i => Math.min(pads.length-1,i+1)); return; }
+      if (k === ' ') { e.preventDefault(); setPlaying(p=>!p); if (!playing) playBuildShape(); else stopAll(); return; }
+      if (k === 'b') { setBuildMode(b=>!b); return; }
+      if (k === 'c') { clearShape(); return; }
+      if (k === 'm') { setModValue(v => Math.min(1, v+0.1)); return; }
+      if (k === 'n') { setModValue(v => Math.max(0, v-0.1)); return; }
+      if (k === 'h') { setHideKeys(h=>!h); return; }
+      // pad triggers 1-5 row, q-t row
+      const padKeys = ['1','2','3','4','5','q','w','e','r','t'];
+      const pi = padKeys.indexOf(e.key);
+      if (pi >= 0 && pi < pads.length && !e.repeat) { triggerPad(pi, true); }
+    };
+    const up = (e) => {
+      const k = e.key.toLowerCase();
+      if (e.key === 'Shift') { setSustain(false); return; }
+      if (k in KEY_MAP_NOTES) { noteOffRaw(KEY_MAP_NOTES[k]); return; }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setPitchValue(0); return; }
+      const padKeys = ['1','2','3','4','5','q','w','e','r','t'];
+      const pi = padKeys.indexOf(e.key);
+      if (pi >= 0 && pi < pads.length) { triggerPad(pi, false); }
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
+  }, [noteOnRaw, noteOffRaw, transposeUp, transposeDown, playing, pads, triggerPad]);
+
+  // ===== Topbar resize =====
+  const onTopbarResize = (e) => {
+    e.preventDefault();
+    const t = e.touches ? e.touches[0] : e;
+    const startY = t.clientY, oh = topbarOpen ? 1 : 0;
+    const move = (ev) => {
+      const m = ev.touches ? ev.touches[0] : ev;
+      const dy = m.clientY - startY;
+      setTopbarOpen(dy > 0 || oh === 1);
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+  };
+
+  // ===== Enter app =====
+  const enter = async () => {
+    await Tone.start();
+    AE.init();
+    setAudioReady(true);
+    setView('app');
+  };
+
+  /* ===========================
+     RENDER
+     =========================== */
+  if (view === 'home') return <Homepage onEnter={enter} />;
+
+  const ws = (id) => windows[id] || { open:false, x:60, y:60, w:340, h:300, z:10 };
+  const renderWindow = (id, title, content, defaults) => {
+    const s = ws(id);
+    if (!s.open) return null;
+    return (
+      <DraggableWindow
+        title={title}
+        x={s.x} y={s.y} w={s.w} h={s.h} z={s.z}
+        onMove={(x,y) => setWindow(id, { x, y })}
+        onResize={(w,h) => setWindow(id, { w, h })}
+        onClose={() => closeWindow(id)}
+        onFocus={() => focusWindow(id)}
+      >
+        {content}
+      </DraggableWindow>
+    );
+  };
+
+  return (
+    <div className="app">
+      {/* ============= TOPBAR ============= */}
+      <div className="topbar" style={{maxHeight: topbarOpen ? 200 : 0, padding: topbarOpen ? '6px 10px' : '0 10px'}}>
+        <div className="top-group">
+          <span className="top-label">VOL</span>
+          <input type="range" min="0" max="1" step="0.01" value={masterVol} onChange={e=>setMasterVol(+e.target.value)} className="vol-slider" />
+          <span className="small">{(masterVol*100|0)}</span>
+        </div>
+        <div className="top-group">
+          <button className="top-btn danger" onClick={()=>{ AE.killAll(); setActiveMidis(new Set()); setSustainHeld(new Set()); }}>⏻ KILL</button>
+          <button className={'top-btn'+(sustain?' active':'')} onClick={()=>setSustain(!sustain)}>SUSTAIN</button>
+        </div>
+        <div className="top-group">
+          <button className="top-btn" onClick={()=>{ setPlaying(true); playBuildShape(); }}>▶ PLAY</button>
+          <button className="top-btn" onClick={()=>{ setPlaying(false); stopAll(); }}>■ STOP</button>
+          <button className={'top-btn'+(buildMode?' active':'')} onClick={()=>setBuildMode(!buildMode)}>BUILD</button>
+          <button className="top-btn" onClick={clearShape}>CLEAR</button>
+        </div>
+        <div className="top-group">
+          <button className={'top-btn'+(chromatic?' active':'')} onClick={()=>setChromatic(!chromatic)}>CHROMATIC</button>
+          <button className="top-btn" onClick={()=>setOctaveShift(o=>o-1)}>OCT −</button>
+          <span className="small">{octaveShift>0?'+':''}{octaveShift}</span>
+          <button className="top-btn" onClick={()=>setOctaveShift(o=>o+1)}>OCT +</button>
+          <button className="top-btn" onClick={transposeDown}>TR −</button>
+          <span className="small">{transposeShift>0?'+':''}{transposeShift}</span>
+          <button className="top-btn" onClick={transposeUp}>TR +</button>
+        </div>
+        <div className="top-group">
+          <button className={'top-btn'+(hideKeys?' active':'')} onClick={()=>setHideKeys(!hideKeys)}>HIDE KEYS</button>
+          <button className={'top-btn'+(scrollEnabled?' active':'')} onClick={()=>setScrollEnabled(!scrollEnabled)}>SLIDE</button>
+        </div>
+        <div className="top-group">
+          <button className="top-btn" onClick={()=>toggleWindow('color', {x:80,y:80,w:320,h:380})}>◆ COLOR</button>
+          <button className="top-btn" onClick={saveProject}>💾 SAVE</button>
+          <button className="top-btn" onClick={openProject}>📂 OPEN</button>
+          <button className="top-btn" onClick={()=>toggleWindow('shortcuts', {x:100,y:100,w:520,h:420})}>⌨ KEYS</button>
+        </div>
+        <div className="topbar-handle" onMouseDown={onTopbarResize} onTouchStart={onTopbarResize}></div>
+      </div>
+      <div style={{height:6, cursor:'ns-resize', background:'transparent', position:'relative'}} onMouseDown={onTopbarResize} onTouchStart={onTopbarResize}>
+        <div style={{position:'absolute', left:'50%', transform:'translateX(-50%)', width:40, height:3, background:'var(--neon-dim)', top:1}}></div>
+      </div>
+
+      {/* ============= WORKSPACE ============= */}
+      <div className="workspace">
+        {renderWindow('banks', 'BANKS',
+          <BanksWindow bankId={bankId} setBankId={setBankId} patchIdx={patchIdx} setPatchIdx={setPatchIdx} voiceMode={voiceMode} setVoiceMode={setVoiceMode} />,
+          {x:20,y:20,w:340,h:380})}
+        {renderWindow('fx', 'FX RACK',
+          <FXRack fx={fx} setFx={setFx} />,
+          {x:380,y:20,w:340,h:480})}
+        {renderWindow('sd', 'SOUND DESIGN',
+          <SoundDesign sd={sd} setSd={setSd} />,
+          {x:740,y:20,w:340,h:380})}
+        {renderWindow('chord', 'CHORD BANK',
+          <ChordBankWindow onSelectChord={onSelectChord} rootFilter={rootFilter} setRootFilter={setRootFilter} />,
+          {x:20,y:420,w:420,h:340})}
+        {renderWindow('pads', 'PADS / SAMPLER',
+          <PadsSamplerWindow
+            pads={pads} setPads={setPads}
+            currentPadIdx={currentPadIdx} setCurrentPadIdx={setCurrentPadIdx}
+            cycleEnabled={cycleEnabled} setCycleEnabled={setCycleEnabled}
+            cycleMode={cycleMode} setCycleMode={setCycleMode}
+            armed={armed} setArmed={setArmed}
+            sustainHold={sustainHold} setSustainHold={setSustainHold}
+            onTriggerPad={triggerPad}
+            onLoadChord={loadChordToPad}
+            buildMode={buildMode} setBuildMode={setBuildMode}
+          />,
+          {x:460,y:420,w:480,h:400})}
+        {renderWindow('mod', 'MOD / PITCH',
+          <ModWheelWindow
+            modValue={modValue} setModValue={setModValue}
+            pitchValue={pitchValue} setPitchValue={setPitchValue}
+            bendRange={bendRange} setBendRange={setBendRange}
+            glideMs={glideMs} setGlideMs={setGlideMs}
+            modEffect={modEffect} setModEffect={setModEffect}
+          />,
+          {x:980,y:20,w:420,h:380})}
+        {renderWindow('3d', '✦ 3D SOUND',
+          <ThreeDSoundWindow
+            enabled={threedOn} setEnabled={setThreedOn}
+            mode={threedMode} setMode={setThreedMode}
+            points={threedPoints} setPoints={setThreedPoints}
+            selectedPoint={threedSelected} setSelectedPoint={setThreedSelected}
+            onDice={dice3D}
+          />,
+          {x:520,y:60,w:440,h:480})}
+        {renderWindow('color', 'COLOR',
+          <ColorCustomize theme={theme} setTheme={setTheme} />,
+          {x:80,y:80,w:320,h:400})}
+        {renderWindow('shortcuts', 'KEYBOARD SHORTCUTS',
+          <ShortcutsWindow />,
+          {x:120,y:80,w:560,h:440})}
+      </div>
+
+      {/* ============= FEATURE BAR ============= */}
+      <div className="feature-bar">
+        <button className={'feature-btn'+(ws('banks').open?' open':'')} onClick={()=>toggleWindow('banks', {x:20,y:20,w:340,h:380})}>BANKS</button>
+        <button className={'feature-btn'+(ws('fx').open?' open':'')} onClick={()=>toggleWindow('fx', {x:380,y:20,w:340,h:480})}>FX RACK</button>
+        <button className={'feature-btn'+(ws('sd').open?' open':'')} onClick={()=>toggleWindow('sd', {x:740,y:20,w:340,h:380})}>SOUND DESIGN</button>
+        <button className={'feature-btn'+(ws('chord').open?' open':'')} onClick={()=>toggleWindow('chord', {x:20,y:420,w:420,h:340})}>CHORD BANK</button>
+        <button className={'feature-btn'+(ws('pads').open?' open':'')} onClick={()=>toggleWindow('pads', {x:460,y:420,w:480,h:400})}>PADS / SAMPLER</button>
+        <button className={'feature-btn'+(ws('mod').open?' open':'')} onClick={()=>toggleWindow('mod', {x:980,y:20,w:420,h:380})}>MOD WHEEL</button>
+        <button className={'feature-btn special'+(ws('3d').open?' open':'')} onClick={()=>toggleWindow('3d', {x:520,y:60,w:440,h:480})}>✦ 3D SOUND</button>
+        <div style={{flex:1}}></div>
+        <span className="small" style={{color:'var(--neon-dim)'}}>{BANKS[bankId].label} / {BANKS[bankId].patches[patchIdx].name}</span>
+      </div>
+
+      {/* ============= KEYBOARD ============= */}
+      {!hideKeys && (
+        <div className="keyboard-wrap">
+          <div className="keyboard-control">
+            <span className="small" style={{color:'var(--neon-dim)'}}>SIZE</span>
+            <input type="range" min="0" max="280" step="2" value={keysHeight}
+              onChange={e=>setKeysHeight(+e.target.value)} className="size-slider"/>
+            <span className="small">RANGE</span>
+            <input type="range" min="13" max="61" step="1" value={numKeys} onChange={e=>setNumKeys(+e.target.value)} style={{width:80}}/>
+            <span className="small" style={{color:'var(--neon)'}}>{midiToName(startMidi)} – {midiToName(startMidi+numKeys-1)}</span>
+          </div>
+          {keysHeight > 16 && (
+            <PianoKeys
+              height={keysHeight}
+              startMidi={startMidi}
+              numKeys={numKeys}
+              activeMidis={activeMidis}
+              litMidis={litMidis}
+              buildLitMidis={buildShape}
+              chromatic={chromatic}
+              onNoteOn={noteOnRaw}
+              onNoteOff={noteOffRaw}
+              scrollEnabled={scrollEnabled}
+              onScroll={(steps) => setStartMidi(s => Math.max(12, Math.min(108-numKeys, s+steps)))}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
